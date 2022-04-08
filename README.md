@@ -30,9 +30,6 @@ The brains of the operation, here we perform whatever actual code we need, befor
 The library bottle used in the template does not support ssl. To enable bottle server in the template support https/ssl in python, one python library of WSGI that Bottle supports is needed. There are many choices, such as Gunicorn, CherryPy, etc. If you are still unclear, just google sth like how to enable Bottle server support HTTPS python. It is definitely fine if you use some libraries other than Bottle.
 
 
-
-
-
 ## Views ##
 
 Simply loads our HTML files and renders any elements of the template.
