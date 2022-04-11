@@ -13,8 +13,9 @@ class SQLDatabase():
     '''
 
     # Get the database running
-    def __init__(self, database_arg=":memory:"):
-        self.conn = sqlite3.connect(database_arg)
+    def __init__(self, database_arg="database.db"):
+        self.conn = sqlite3.connect(database_arg) # create a connection object, creat a database
+        # the cursor object allow us to excute the commands and queries in the database
         self.cur = self.conn.cursor()
 
     # SQLite 3 does not natively support multiple commands in a single statement
@@ -31,6 +32,7 @@ class SQLDatabase():
 
     # Commit changes to the database
     def commit(self):
+        # similar to git commit
         self.conn.commit()
 
     #-----------------------------------------------------------------------------
@@ -49,28 +51,33 @@ class SQLDatabase():
             username TEXT,
             password TEXT,
             admin INTEGER DEFAULT 0
-        )""")
+        );""")
 
         self.commit()
-
         # Add our admin user
-        self.add_user('admin', admin_pasword, admin=1)
+        self.add_user('admin', admin_password, admin=1)
 
-    #-----------------------------------------------------------------------------
-    # User handling
-    #-----------------------------------------------------------------------------
+    #-----------------------------------------------------------------------------#
+    #-----------------------------------------------------------------------------#
+    #-----------------------------------------------------------------------------#
+    #++++++++++++++++++++++++++++ User handling ++++++++++++++++++++++++++++++++++#
+    #-----------------------------------------------------------------------------#
+    #-----------------------------------------------------------------------------#
+    #-----------------------------------------------------------------------------#
 
     # Add a user to the database
-    def add_user(self, username, password, admin=0):
+    def add_user(self,username, password, admin=0):
         sql_cmd = """
                 INSERT INTO Users
+                (Id,username,password,admin)
                 VALUES({id}, '{username}', '{password}', {admin})
             """
 
-        sql_cmd = sql_cmd.format(username=username, password=password, admin=admin)
+        sql_cmd = sql_cmd.format(id=0,username=username, password=password, admin=admin)
 
         self.execute(sql_cmd)
         self.commit()
+
         return True
 
     #-----------------------------------------------------------------------------
@@ -84,9 +91,20 @@ class SQLDatabase():
             """
 
         sql_query = sql_query.format(username=username, password=password)
-
+        
+        self.execute(sql_query)
+        
         # If our query returns
-        if cur.fetchone():
+        if self.cur.fetchone():
             return True
         else:
             return False
+        
+        
+
+# create our database
+database = SQLDatabase() 
+database.database_setup(admin_password='admin')
+print(database.add_user('irene', 'abc', admin=0))
+print(database.check_credentials('irene','abc'))
+print(database.check_credentials('kkk', '123'))
