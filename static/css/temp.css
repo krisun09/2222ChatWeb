@@ -22,7 +22,8 @@ li a:hover {
     background-color: #111;
 }
 
-html, body {
+html,
+body {
     height: 100%;
     margin: 0;
     padding: 0;
@@ -36,10 +37,20 @@ img {
     max-width: 45%;
 }
 
-html, body, {
-    position:fixed;
-    top:0;
-    bottom:0;
-    left:0;
-    right:0;
+.button_full {
+    width: 100%;
+    padding: 9px 20px;
+    font-size: 16px;
+}
+
+html,body {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
+
+.form_vertical {
+    margin-bottom: 20px;
 }

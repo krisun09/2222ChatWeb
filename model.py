@@ -34,6 +34,17 @@ def login_form():
     return page_view("login")
 
 #-----------------------------------------------------------------------------
+# register
+#-----------------------------------------------------------------------------
+
+def register():
+    '''
+        register
+        Returns the view for the register
+    '''
+    return page_view("register")
+
+#-----------------------------------------------------------------------------
 
 # Check the login credentials
 def login_check(username, password):

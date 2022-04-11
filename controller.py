@@ -104,18 +104,37 @@ def post_login():
     # Call the appropriate method
     return model.login_check(username, password)
 
-
-
 #-----------------------------------------------------------------------------
 
 @get('/about')
-def get_about():
+def get_about(): 
     '''
         get_about
         
         Serves the about page
     '''
     return model.about()
+
+#-----------------------------------------------------------------------------
+
+# Allow user to register
+@get('/register')
+def get_register():
+    '''
+        get_register
+        
+        Handles register attempts
+        Expects a form containing 'username' and 'password' fields
+    '''
+
+    # Handle the form processing
+    username = request.forms.get('username')
+    password = request.forms.get('password')
+    
+    # TODO: send username & pwd to db (check if username is valid?)
+
+    return model.register()
+
 #-----------------------------------------------------------------------------
 
 # Help with debugging
