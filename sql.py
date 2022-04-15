@@ -1,3 +1,4 @@
+from operator import truediv
 import sqlite3
 
 # This class is a simple handler for all of our SQL database actions
@@ -13,7 +14,7 @@ class SQLDatabase():
     '''
 
     # Get the database running
-    def __init__(self, database_arg="database.db"):
+    def __init__(self, database_arg):
         self.conn = sqlite3.connect(database_arg) # create a connection object, creat a database
         # the cursor object allow us to excute the commands and queries in the database
         self.cur = self.conn.cursor()
@@ -46,6 +47,7 @@ class SQLDatabase():
         self.commit()
 
         # Create the users table
+        # add column public key
         self.execute("""CREATE TABLE Users(
             Id INT,
             username TEXT,
@@ -100,11 +102,38 @@ class SQLDatabase():
         else:
             return False
         
-        
+    def check_username_exist(self, username):
+        sql_query = """
+                SELECT 1 
+                FROM Users
+                WHERE username = '{username}'
+            """
 
+        sql_query = sql_query.format(username=username)
+        
+        self.execute(sql_query)
+        
+        if self.cur.fetchone():
+            # username exist in database
+            return True
+        else:
+            return False
+        
+    def add_friend(self,user_id, friend_id):
+        # check friend exist in the database
+        # if exist, get the public key 
+        return 
+        
+    def get_friendlist(self, username):
+        
+        
+        return 
+"""
 # create our database
 database = SQLDatabase() 
 database.database_setup(admin_password='admin')
 print(database.add_user('irene', 'abc', admin=0))
 print(database.check_credentials('irene','abc'))
 print(database.check_credentials('kkk', '123'))
+
+"""
