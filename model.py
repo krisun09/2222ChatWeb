@@ -8,6 +8,7 @@
 import view
 import random
 import sql
+import controller
 
 # Initialise our views, all arguments are defaults for the template
 page_view = view.View()
@@ -38,6 +39,37 @@ def login_form():
     return page_view("login")
 
 #-----------------------------------------------------------------------------
+
+# Check the login credentials
+def login_check(username, password):
+    '''
+        login_check
+        Checks usernames and passwords
+
+        :: username :: The username
+        :: password :: The password
+
+        Returns either a view for valid credentials, or a view for invalid credentials
+    '''
+
+    # By default assume good creds
+    login = True
+
+    # TODO: change to check through the db
+    
+    if username != "admin": # Wrong Username
+        err_str = "Incorrect Username"
+        login = False
+    
+    if password != "password": # Wrong password
+        err_str = "Incorrect Password"
+        login = False
+        
+    if login: 
+        return page_view("valid", name=username)
+    else:
+        return page_view("invalid", reason=err_str)
+#-----------------------------------------------------------------------------
 # register
 #-----------------------------------------------------------------------------
 
@@ -61,43 +93,15 @@ def register(username, password):
         record = sql_db.cur.fetchall()
         print(record)
 
-        return page_view("register", name=username)
+        # register done, go back to login page
+        return page_view("login")
     else:
         return page_view("invalid", reason=err_str)
-
-
-def register_form():
-     return page_view("register")
 
 #-----------------------------------------------------------------------------
 
-# Check the login credentials
-def login_check(username, password):
-    '''
-        login_check
-        Checks usernames and passwords
-
-        :: username :: The username
-        :: password :: The password
-
-        Returns either a view for valid credentials, or a view for invalid credentials
-    '''
-
-    # By default assume good creds
-    login = True
-    
-    if username != "admin": # Wrong Username
-        err_str = "Incorrect Username"
-        login = False
-    
-    if password != "password": # Wrong password
-        err_str = "Incorrect Password"
-        login = False
-        
-    if login: 
-        return page_view("valid", name=username)
-    else:
-        return page_view("invalid", reason=err_str)
+def register_form():
+     return page_view("register")
 
 #-----------------------------------------------------------------------------
 # About
