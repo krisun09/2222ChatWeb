@@ -23,7 +23,7 @@ from bottle import run
 
 # For the template, we will keep them together
 
-
+import sql
 import model
 import view
 import controller
@@ -57,20 +57,16 @@ def manage_db():
         Blank function for database support, use as needed
     '''
     pass
-
-"""
-import sql
     
 def manage_db():
     '''
         manage_db
         Starts up and re-initialises an SQL databse for the server
     '''
-    database_args = ":memory:" # Currently runs in RAM, might want to change this to a file if you use it
-    sql_db = sql.SQLDatabase(database_args=database_args)
+    database_args = "database.db" # Currently runs in RAM, might want to change this to a file if you use it
+    # sql_db = sql.SQLDatabase(database_args=database_args)
 
     return
-"""
 
 #-----------------------------------------------------------------------------
 
