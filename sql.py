@@ -1,4 +1,3 @@
-from operator import truediv
 import sqlite3
 
 # This class is a simple handler for all of our SQL database actions
@@ -109,7 +108,7 @@ class SQLDatabase():
     #--------------------------------------------------------------------------#
     #--------------------------------------------------------------------------#
     # check does username already exist or not  
-    def check_username_exist(self, username):
+    def check_user_exist(self, username):
         sql_query = """
                 SELECT 1 
                 FROM Users
@@ -130,42 +129,86 @@ class SQLDatabase():
     #--------------------------------------------------------------------------#
     #--------------------------------------------------------------------------#   
     def add_friend(self,user_id, friend_id):
-        # check friend exist in the database
-        # if exist, get the public key 
-         
-        # get the friend list
+        # check does the friend that we want to add is our web user or not
+        if self.check_user_exist(friend_id) == False:
+            msg = "Friend does not exist, please enter a valid friend username."
+            return msg
+                
+        # get the friend list for the user     
+        str_friendls = self.get_friendlist(user_id) # get the friend list
+        if str_friendls == False:
+            msg = "Username not found."
+            return msg
+        
+        if str_friendls == None:
+            # friend list is empty for this user
+            # create a friend list for him/she
+            friend_list = []
+            friend_list.append(friend_id)
+        else:
+            # already have a friend list
+            friend_list = eval(str_friendls)
+            friend_list.append(friend_id)
+                
+        str_friendls = str(friend_id) 
+             
+        # update the friend list into database 
+        sql_query = """
+            UPDATE Users 
+            SET friendlist = str_friends,
+            WHERE username = '{username}'
+        """ 
+        sql_query = sql_query.format(username=user_id)
+        self.execute(sql_query)
+        self.commit()
+            
+        msg = "Successfully add friend into friend list"
+        return msg
+
+        
+    def get_friendlist(self, username):
+        # get the friend list for the user
         sql_query = """
                 SELECT friendlist 
                 FROM Users
                 WHERE username = '{username}'
-            """
-            
-        sql_query = sql_query.format(username=user_id)
+            """                   
+        sql_query = sql_query.format(username=username)
         self.execute(sql_query)
         self.commit()
         
         if self.cur.fetchone():
-            friendlis = self.cur.fetchone()
-            if friendlis == None:
-                friendlis
-            msg = 'user exist'
-            return msg
+            # username exist in database
+            friend_list = self.cur.fetchone()
+            return friend_list
         else:
-            # user not found/ user_id not exist in the database
-            msg = "User_id not correct"
-            return msg        
+            # user not found
+            return False
         
+    def get_pk(self, username):
+        sql_query = """
+                SELECT pk 
+                FROM Users
+                WHERE username = '{username}'
+            """                   
+        sql_query = sql_query.format(username=username)
+        self.execute(sql_query)
+        self.commit()
         
-    def get_friendlist(self, username):
-        
-        
-        return 
+        if self.cur.fetchone():
+            # username exist in database
+            pk = str(self.cur.fetchone())
+            return pk
+        else:
+            # user not found
+            return False
 """
 # create our database
 database = SQLDatabase() 
 database.database_setup('admin')
 print(database.add_user('irene', 'abc',None,admin=0))
+print(database.add_user('kkk', '134',None,admin=0))
 print(database.check_credentials('irene','abc'))
 print(database.check_credentials('kkk', '123'))
-print(database.add_friend('irene', 'kk'))
+print(database.add_friend('irene', 'kkk'))
 """
