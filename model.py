@@ -7,9 +7,13 @@
 '''
 import view
 import random
+import sql
 
 # Initialise our views, all arguments are defaults for the template
 page_view = view.View()
+
+database_args = "database.db"
+sql_db = sql.SQLDatabase(database_args)
 
 #-----------------------------------------------------------------------------
 # Index
@@ -37,12 +41,33 @@ def login_form():
 # register
 #-----------------------------------------------------------------------------
 
-def register():
+def register(username, password):
     '''
         register
         Returns the view for the register
     '''
-    return page_view("register")
+    register = True
+    err_str = "Invalid"
+
+    if register: 
+        print(username)
+        print(password)
+
+        #TODO: generate public key and pwd
+        # user object should have public key as attribute
+
+        sql_db.add_user(username, password)
+
+        record = sql_db.cur.fetchall()
+        print(record)
+
+        return page_view("register", name=username)
+    else:
+        return page_view("invalid", reason=err_str)
+
+
+def register_form():
+     return page_view("register")
 
 #-----------------------------------------------------------------------------
 

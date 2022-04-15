@@ -117,26 +117,36 @@ def get_about():
 
 #-----------------------------------------------------------------------------
 
-# Allow user to register
+# Display the register page
 @get('/register')
-def get_register():
+def get_register_controller():
     '''
         get_register
         
-        Handles register attempts
-        Expects a form containing 'username' and 'password' fields
+        Serves the login page
+    '''
+    return model.register_form()
+
+#-----------------------------------------------------------------------------
+
+# Attempt the register
+@post('/register')
+def post_register():
+    '''
+         get_register
+        
+         Handles register attempts
+         Expects a form containing 'username' and 'password' fields
     '''
 
     # Handle the form processing
     username = request.forms.get('username')
     password = request.forms.get('password')
     
-    # TODO: send username & pwd to db (check if username is valid?)
-
-    return model.register()
+    # Call the appropriate method
+    return model.register(username, password)
 
 #-----------------------------------------------------------------------------
-
 # Help with debugging
 @post('/debug/<cmd:path>')
 def post_debug(cmd):

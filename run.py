@@ -23,7 +23,7 @@ from bottle import run
 
 # For the template, we will keep them together
 
-
+import sql
 import model
 import view
 import controller
@@ -57,10 +57,7 @@ def manage_db():
         Blank function for database support, use as needed
     '''
     pass
-
-"""
-import sql
-    
+"""    
 def manage_db():
     '''
         manage_db
