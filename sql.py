@@ -137,7 +137,7 @@ class SQLDatabase():
         # get the friend list for the user     
         str_friendls = self.get_friendlist(user_id) # get the friend list
         if str_friendls == False:
-            msg = "Username not found."
+            msg = "Please try to log in, username not found."
             return msg
         
         if str_friendls == None:
