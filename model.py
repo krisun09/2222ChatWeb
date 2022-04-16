@@ -10,6 +10,7 @@ import random
 import sql
 from Crypto.PublicKey import RSA
 
+
 # Initialise our views, all arguments are defaults for the template
 page_view = view.View()
 
@@ -56,18 +57,11 @@ def login_check(username, password):
     # By default assume good creds
     login = True
 
-    # TODO: change to check through the db, call sql.check_username_exists()
-    
-    if username != "admin": # Wrong Username
-        err_str = "Incorrect Username"
-        login = False
-    
-    if password != "password": # Wrong password
-        err_str = "Incorrect Password"
-        login = False
+    sql_db.check_credentials(username, password)
         
-    if login: 
-        return page_view("valid", name=username)
+    if login:
+        print(sql_db.check_user_exist(username))
+        return page_view("valid_login", name=username, friend_ls=sql_db.get_friendlist(username))
     else:
         return page_view("invalid", reason=err_str)
 
@@ -103,6 +97,11 @@ def register(username, password):
 
 def register_form():
      return page_view("register")
+
+#-----------------------------------------------------------------------------
+
+def display_valid_login_page(username):
+    return page_view("valid_login", friend_ls=sql_db.get_friendlist(username))
 
 #-----------------------------------------------------------------------------
 
