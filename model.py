@@ -8,13 +8,14 @@
 import view
 import random
 import sql
-import controller
+from Crypto.PublicKey import RSA
 
 # Initialise our views, all arguments are defaults for the template
 page_view = view.View()
 
 database_args = "database.db"
 sql_db = sql.SQLDatabase(database_args)
+sql_db.database_setup(admin_password='admin')
 
 #-----------------------------------------------------------------------------
 # Index
@@ -55,7 +56,7 @@ def login_check(username, password):
     # By default assume good creds
     login = True
 
-    # TODO: change to check through the db
+    # TODO: change to check through the db, call sql.check_username_exists()
     
     if username != "admin": # Wrong Username
         err_str = "Incorrect Username"
@@ -69,15 +70,18 @@ def login_check(username, password):
         return page_view("valid", name=username)
     else:
         return page_view("invalid", reason=err_str)
+
 #-----------------------------------------------------------------------------
 # register
 #-----------------------------------------------------------------------------
 
 def register(username, password):
+
     '''
         register
         Returns the view for the register
     '''
+
     register = True
     err_str = "Invalid"
 
@@ -85,10 +89,7 @@ def register(username, password):
         print(username)
         print(password)
 
-        #TODO: generate public key and pwd
-        # user object should have public key as attribute
-
-        sql_db.add_user(username, password)
+        sql_db.add_user(username, password, str(generate_RSA_keypair()), admin=0)
 
         record = sql_db.cur.fetchall()
         print(record)
@@ -102,6 +103,28 @@ def register(username, password):
 
 def register_form():
      return page_view("register")
+
+#-----------------------------------------------------------------------------
+
+def generate_RSA_keypair():
+    key = RSA.generate(2048)
+    private_key = key.export_key()
+
+    print("private_key: " + str(private_key))
+
+    file_out = open("private.pem", "wb")
+    file_out.write(private_key)
+    file_out.close()
+
+    public_key = key.publickey().export_key()
+
+    print("public_key: " + str(public_key))
+
+    file_out = open("receiver.pem", "wb")
+    file_out.write(public_key)
+    file_out.close()
+
+    return public_key
 
 #-----------------------------------------------------------------------------
 # About
@@ -140,7 +163,6 @@ def debug(cmd):
         return str(eval(cmd))
     except:
         pass
-
 
 #-----------------------------------------------------------------------------
 # 404
