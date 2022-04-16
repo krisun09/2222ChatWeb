@@ -56,8 +56,9 @@ def login_check(username, password):
 
     # By default assume good creds
     login = True
-
-    sql_db.check_credentials(username, password)
+    err_str = "Invalid"
+    
+    login = sql_db.check_credentials(username, password) # it will change to false if username and password does not match
         
     if login:
         print(sql_db.check_user_exist(username))
@@ -76,17 +77,20 @@ def register(username, password):
         Returns the view for the register
     '''
 
-    register = True
-    err_str = "Invalid"
+    #register = True
+    register = sql_db.check_user_exist(username) # check whether the name has been used or not, if not, change the value of register
+    err_str = "Username in used"
 
-    if register: 
+    if register == False: 
+        # false when the user name is not exist/ not been used
         print(username)
         print(password)
+        #sql_db.add_user(username, password, str(generate_RSA_keypair()), admin=0)
+        sql_db.add_user(username, password, generate_RSA_keypair().decode(), admin=0)
+        sql_db.add_user(username, password, None, admin=0)
 
-        sql_db.add_user(username, password, str(generate_RSA_keypair()), admin=0)
-
-        record = sql_db.cur.fetchall()
-        print(record)
+        print()
+        print(sql_db.check_user_exist(username))
 
         # register done, go back to login page
         return page_view("login")

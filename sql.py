@@ -13,7 +13,7 @@ class SQLDatabase():
     '''
 
     # Get the database running
-    def __init__(self, database_arg='database.db'):
+    def __init__(self, database_arg):
         self.conn = sqlite3.connect(database_arg) # create a connection object, creat a database
         # the cursor object allow us to excute the commands and queries in the database
         self.cur = self.conn.cursor()
@@ -80,7 +80,8 @@ class SQLDatabase():
 
         self.execute(sql_cmd)
         self.commit()
-
+        
+        #print(self.check_user_exist(username))
         return True
     
     #--------------------------------------------------------------------------#
@@ -204,11 +205,11 @@ class SQLDatabase():
             return False
 """
 # create our database
-database = SQLDatabase() 
+database = SQLDatabase("database.db") 
 database.database_setup('admin')
-print(database.add_user('irene', 'abc',None,admin=0))
-print(database.add_user('kkk', '134',None,admin=0))
+database.add_user('irene', 'abc',None,admin=0)
+database.add_user('kkk', '134',None,admin=0)
 print(database.check_credentials('irene','abc'))
 print(database.check_credentials('kkk', '123'))
-print(database.add_friend('irene', 'kkk'))
+#print(database.add_friend('irene', 'kkk'))
 """
