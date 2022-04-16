@@ -13,6 +13,9 @@ import model
 #-----------------------------------------------------------------------------
 
 # Allow image loading
+import sql
+
+
 @route('/img/<picture:path>')
 def serve_pictures(picture):
     '''
@@ -100,9 +103,15 @@ def post_login():
     # Handle the form processing
     username = request.forms.get('username')
     password = request.forms.get('password')
-    
+
     # Call the appropriate method
     return model.login_check(username, password)
+
+#-----------------------------------------------------------------------------
+
+# @get('/valid_login')
+# def valid_login_controller():
+#     model.display_valid_login_page()
 
 #-----------------------------------------------------------------------------
 
