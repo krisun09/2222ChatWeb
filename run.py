@@ -48,9 +48,9 @@ def run_server():
     run(host=host,
         port=port,
         server='gunicorn',
-        keyfile='certs/info2222.test.key',
+        keyfile='certs/2222.test.key',
         reloader=1,
-        certfile='certs/info2222.test.crt',
+        certfile='certs/2222.test.crt',
         debug=debug)
 
 #-----------------------------------------------------------------------------
