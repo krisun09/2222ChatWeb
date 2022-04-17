@@ -61,6 +61,7 @@ def login_check(username, password):
     login = sql_db.check_credentials(username, password) # it will change to false if username and password does not match
         
     if login:
+        print("this is after login: ")
         print(sql_db.check_user_exist(username))
         return page_view("valid_login", name=username, friend_ls=sql_db.get_friendlist(username))
     else:
@@ -89,7 +90,7 @@ def register(username, password):
         sql_db.add_user(username, password, generate_RSA_keypair().decode(), admin=0)
         #sql_db.add_user(username, password, None, admin=0)
         print()
-        print()
+        print("this is after register: ")
         print(sql_db.check_user_exist(username))
 
         # register done, go back to login page
