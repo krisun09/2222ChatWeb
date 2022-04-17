@@ -71,7 +71,7 @@ def manage_db():
     '''
     database_args = "database.db" # Currently runs in RAM, might want to change this to a file if you use it
     sql_db = sql.SQLDatabase(database_args)
-
+    sql_db.database_setup('admin')
     return
 
 #-----------------------------------------------------------------------------
