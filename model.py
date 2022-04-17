@@ -87,8 +87,8 @@ def register(username, password):
         print(password)
         #sql_db.add_user(username, password, str(generate_RSA_keypair()), admin=0)
         sql_db.add_user(username, password, generate_RSA_keypair().decode(), admin=0)
-        sql_db.add_user(username, password, None, admin=0)
-
+        #sql_db.add_user(username, password, None, admin=0)
+        print()
         print()
         print(sql_db.check_user_exist(username))
 
