@@ -30,11 +30,11 @@ body {
 }
 
 img {
-    padding: 0;
     display: block;
-    margin: 0 auto;
-    max-height: 45%;
-    max-width: 45%;
+    height: 20em;
+    max-height: 500px;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .button_full {
@@ -53,4 +53,24 @@ html,body {
 
 .form_vertical {
     margin-bottom: 20px;
+}
+
+.button {
+  border: none;
+  padding: 16px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  background-color: white;
+  color: black;
+  font-size: 16px;
+  margin: 4px 2px;
+  transition-duration: 0.4s;
+  cursor: pointer;
+  border: 2px solid #4CAF50;
+}
+
+.button1:hover {
+  background-color: #4CAF50;
+  color: white;
 }
