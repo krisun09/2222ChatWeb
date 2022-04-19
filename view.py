@@ -65,7 +65,7 @@ class View():
         file = open(path, 'r')
         text = ""
         for line in file:
-            text+= line
+            text += line
         file.close()
         return text
 
@@ -103,7 +103,7 @@ class View():
         '''
         template = string.Template(template)
         template = template.safe_substitute(**kwargs)
-        return  template
+        return template
 
 
     def global_render(self, template):

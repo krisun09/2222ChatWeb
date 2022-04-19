@@ -151,19 +151,23 @@ class SQLDatabase():
             friend_list = eval(str_friendls)
             friend_list.append(friend_id)
                 
-        str_friendls = str(friend_id) 
+        str_friendls = str(friend_list)
+        print(str_friendls)
              
         # update the friend list into database 
         sql_query = """
             UPDATE Users 
-            SET friendlist = str_friends,
+            SET friendlist = '{str_friendls}'
             WHERE username = '{username}'
         """ 
-        sql_query = sql_query.format(username=user_id)
+        sql_query = sql_query.format(str_friendls=str_friendls, username=user_id)
         self.execute(sql_query)
         self.commit()
-            
+
         msg = "Successfully add friend into friend list"
+
+        print(self.get_friendlist(user_id))
+
         return msg
 
         
@@ -203,13 +207,13 @@ class SQLDatabase():
         else:
             # user not found
             return False
-"""
+
 # create our database
 database = SQLDatabase("database.db") 
 database.database_setup('admin')
-database.add_user('irene', 'abc',None,admin=0)
-database.add_user('kkk', '134',None,admin=0)
-print(database.check_credentials('irene','abc'))
-print(database.check_credentials('kkk', '123'))
-#print(database.add_friend('irene', 'kkk'))
-"""
+database.add_user('irene', 'abc',None,admin=0) #true
+database.add_user('kkk', '134',None,admin=0)  #true
+print(database.check_credentials('irene','abc')) #true
+print(database.check_credentials('kkk', '123')) #false
+print(database.add_friend('irene', 'kkk'))
+print(database.get_friendlist('irene'))

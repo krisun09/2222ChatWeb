@@ -143,8 +143,14 @@ def add_friend_form():
 
 
 def add_friend(user_id, friend_name):
-    sql_db.add_friend(user_id, friend_name)
+    print(user_id)
+    print(sql_db.add_friend(user_id, friend_name))
+    print(sql_db.get_friendlist(user_id))
+    return page_view("/valid_login")
 
+
+def choose_friend_form():
+    return page_view("/choose_friend_to_chat")
 
 # -----------------------------------------------------------------------------
 # About

@@ -109,14 +109,14 @@ def post_login():
 
 #-----------------------------------------------------------------------------
 
-@post('/valid_login')
-def valid_login_controller():
-    if request.POST.get("AddFriend"):
-        action = "Add_friend"
-        print(action)
-    elif request.POST.get("ChooseFriend"):
-        action = "Choose_friend"
-        print(action)
+# @post('/valid_login')
+# def valid_login_controller():
+#     if request.POST.get("AddFriend"):
+#         action = "Add_friend"
+#         print(action)
+#     elif request.POST.get("ChooseFriend"):
+#         action = "Choose_friend"
+#         print(action)
 #-----------------------------------------------------------------------------
 
 @get('/about')
@@ -163,16 +163,29 @@ def post_register():
 @get('/add_friend')
 def get_add_friend_controller():
     return model.add_friend_form()
-
+# Attempt to add friend
 @post('/add_friend')
 def post_add_friend():
     friend_username = request.forms.get("friendUsername")
+    # hard coded username
+    return model.add_friend("kk", friend_username)
+
+    # TODO: identify user and pass username to server
 
 #-----------------------------------------------------------------------------
+@get('/choose_friend_to_chat')
+def get_choose_friend():
+    # TODO: identify user and pass username to server
+    return model.choose_friend_form()
+
 @post('/choose_friend_to_chat')
 def post_choose_friend():
     friend_name = request.forms.get("friendName")
+    # TODO: identify user and pass username to server
 
+    # Handle the form processing
+    # username = request.forms.get('username')
+    # return model.choose_friend_form(username)
 
 #-----------------------------------------------------------------------------
 # Help with debugging
