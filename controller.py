@@ -160,6 +160,21 @@ def post_register():
     return model.register(username, password)
 
 #-----------------------------------------------------------------------------
+@get('/add_friend')
+def get_add_friend_controller():
+    return model.add_friend_form()
+
+@post('/add_friend')
+def post_add_friend():
+    friend_username = request.forms.get("friendUsername")
+
+#-----------------------------------------------------------------------------
+@post('/choose_friend_to_chat')
+def post_choose_friend():
+    friend_name = request.forms.get("friendName")
+
+
+#-----------------------------------------------------------------------------
 # Help with debugging
 @post('/debug/<cmd:path>')
 def post_debug(cmd):
