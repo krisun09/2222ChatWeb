@@ -36,6 +36,11 @@ function generateKeyPairs() {
         // export key value
         var pubk = window.exportCryptoKey(public_key);
         var prik = window.exportCryptoKey(private_key);
+        console.log(pubk);
+        console.log(prik);
+
+        var encrypted = window.encryptMessage("hello", pubk);
+        window.decryptMessage(encrypted, prik);
 
     })
     .catch(function(err){
@@ -63,22 +68,115 @@ function generate_SEK(){
     })
 }
 
-async function importCryptoKey(jwk){
-    
+async function importPublicKey(jwk) {
+    return await window.crypto.subtle.importKey(
+        "jwk",
+        jwk,
+        {    
+            name: "RSA-OAEP",
+            hash: "SHA-256"
+        },
+      true,
+      ['encrypt']
+    )
+    .then(function(publickey){
+        console.log(publickey);
+    })
+    .catch(function(err){
+        console.log(err);
+    })
+  }
 
-}
+async function importPrivateKey(jwk) {
+    return await window.crypto.subtle.importKey(
+        "jwk",
+        jwk,
+        {    
+            name: "RSA-OAEP",
+            hash: "SHA-256"
+        },
+      true,
+      ['decrypt']
+    )
+    .then(function(privatekey){
+        console.log(privatekey);
+    })
+    .catch(function(err){
+        console.log(err);
+    })
+  }
 
 async function exportCryptoKey(key) {
     const exported = await window.crypto.subtle.exportKey(
       "jwk",
       key
     );
-    alert(exported);
+    //alert(exported);
     var jsonString = JSON.stringify(exported);
-    alert(jsonString);
-    return jsonString;
+    //alert(jsonString);
+    console.log(jsonString);
+}
+
+function encryptMessage(msg, public_key){
+    // msg is the text we want to encrypt
+    // public_key is the friend who you want to talk to 's public key
+    var pub_key = window.importPublicKey(JSON.parse(public_key)); // back to Crypto key object
+    
+    
+    var encoded_msg = window.str2ab(msg);
+    return crypto.subtle.encrypt(
+        {
+            name: 'RSA-OAEP'
+        },
+        pub_key, 
+        encoded_msg // data that want to encrypt -- should be an array buffer format
+    )
+    .then(function(encrypted){
+        var encrypted_msg = new Uint8Array(encrypted); // return an arraybuffer of the encrypted message
+        alert(encrypted_msg);
+    })
+    .catch(function(err){
+        console.log(err);
+    })
+}
+
+function decryptMessage(encrypted_msg, private_key){
+    var pri_key = window.importPrivateKey(JSON.parse(private_key));
+
+    return crypto.subtle.decrypt(
+        {
+            name: 'RSA-OAEP'
+        },
+        pri_key,
+        encrypted_msg
+    )
+    .then(function(decrypted){
+        var decrypted_msg = new Uint8Array(decrypted);
+        // convert decrypted msg back to string
+        var str_msg = widow.ab2str(decrypted_msg);
+        alert(str_msg)
+
+    })
+    .catch(function(err){
+        console.log(err);
+    })
+}
+
+function ab2str(buf) {
+    return String.fromCharCode.apply(null, new Uint8Array(buf));
+}
+function str2ab(str) {
+    var buf = new ArrayBuffer(str.length*2); // 2 bytes for each char
+    var bufView = new Uint8Array(buf);
+    for (var i=0, strLen=str.length; i < strLen; i++) {
+    bufView[i] = str.charCodeAt(i);
+    }
+    return buf;
 }
 
 
-window.generateKeyPairs() 
+window.generateKeyPairs();
+
+
+
 
