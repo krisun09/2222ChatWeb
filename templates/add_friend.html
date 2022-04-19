@@ -6,7 +6,12 @@
 </head>
 <body>
 <div>
-    <input>
+    <form action="/add_friend" method="post">
+        <label for="friendUsername">Please enter friend's username:</label>
+        <input type="text" id="friendUsername" name="friendUsername">
+        <br>
+        <button class="button button1" name="AddFriend" formmethod="post" type="submit">Send request</button>
+    </form>
 </div>
 
 </body>

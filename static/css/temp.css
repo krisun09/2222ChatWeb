@@ -1,15 +1,21 @@
-ul {
-    list-style-type: none;
-    margin: 0;
-    padding: 0;
-    overflow: hidden;
-    background-color: #333;
-}
+
 
 li {
     float: left;
 }
 
+.header {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: #333;
+
+    display: block;
+    color: white;
+    text-align: center;
+    text-decoration: none;
+}
 li a {
     display: block;
     color: white;
@@ -18,7 +24,7 @@ li a {
     text-decoration: none;
 }
 
-li a:hover {
+.header a:hover {
     background-color: #111;
 }
 
@@ -36,7 +42,11 @@ img {
     margin-left: auto;
     margin-right: auto;
 }
-
+.center {
+  margin: auto;
+  width: 50%;
+  padding: 10px;
+}
 .button_full {
     width: 100%;
     padding: 9px 20px;
