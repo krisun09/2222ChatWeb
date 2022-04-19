@@ -2,9 +2,16 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Let's Chat</title>
+    <title>Chat</title>
 </head>
 <body>
-
+<div class="form_vertical">
+    <p>Here is your friend list: ${friend_ls}</p>
+    <h2>Type in your friend's name to send a message</h2>
+     <form method="post" action="/choose_friend_to_chat">
+        <label for="friendName">Friend's Name:</label>
+        <input type="text" name="friendName">
+     </form>
+</div>
 </body>
 </html>

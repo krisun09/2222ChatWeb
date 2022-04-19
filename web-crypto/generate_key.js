@@ -9,27 +9,34 @@
     Generate an encryption key pair, then set up event listeners
     on the "Encrypt" and "Decrypt" buttons.
     */
-
-    window.crypto.subtle.generateKey(
+    
+    
+    var keypair = window.crypto.subtle.generateKey(
         {
             name: "RSA-OAEP",
             modulusLength: 2048,
             publicExponent: new Uint8Array([1, 0, 1]),
             hash: "SHA-256",
         },
-        false, // whether the key is extractable (i.e. can be used in exportKey)
+        true, // whether the key is extractable (i.e. can be used in exportKey)
         ["encrypt", "decrypt"]
     )
     .then(function(key){
+        // 如果成功，执行这个function
         //returns a keypair object
-        console.log(key);
-        console.log(key.publicKey);
-        console.log(key.privateKey);
+        var public_key = key.publicKey;
+        var private_key = key.privateKey;
+        
+
     })
     .catch(function(err){
+        // 如果不成功，执行这个函数
         console.error(err);
     });
-
+    
+    
+    
+    
     /*
     Fetch the contents of the "message" textbox, and encode it
     in a form we can use for the encrypt operation.

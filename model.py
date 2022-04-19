@@ -8,8 +8,9 @@
 import view
 import random
 import sql
+import hashlib
+import os
 from Crypto.PublicKey import RSA
-
 
 # Initialise our views, all arguments are defaults for the template
 page_view = view.View()
@@ -18,9 +19,10 @@ database_args = "database.db"
 sql_db = sql.SQLDatabase(database_args)
 sql_db.database_setup(admin_password='admin')
 
-#-----------------------------------------------------------------------------
+
+# -----------------------------------------------------------------------------
 # Index
-#-----------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
 
 def index():
     '''
@@ -29,9 +31,10 @@ def index():
     '''
     return page_view("index")
 
-#-----------------------------------------------------------------------------
+
+# -----------------------------------------------------------------------------
 # Login
-#-----------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
 
 def login_form():
     '''
@@ -40,7 +43,8 @@ def login_form():
     '''
     return page_view("login")
 
-#-----------------------------------------------------------------------------
+
+# -----------------------------------------------------------------------------
 
 # Check the login credentials
 def login_check(username, password):
@@ -56,10 +60,14 @@ def login_check(username, password):
 
     # By default assume good creds
     login = True
-    err_str = "Invalid"
+    err_str = "Incorrect username or password"
     
-    login = sql_db.check_credentials(username, password) # it will change to false if username and password does not match
-        
+    salt = sql_db.get_salt(username).encode()
+    print(salt)
+    hashed_pwd = hashlib.pbkdf2_hmac('sha256', password.encode('utf-8'), salt, 100000)
+    login = sql_db.check_credentials(username,
+                                     hashed_pwd)  # it will change to false if username and password does not match
+
     if login:
         print("this is after login: ")
         print(sql_db.check_user_exist(username))
@@ -67,28 +75,29 @@ def login_check(username, password):
     else:
         return page_view("invalid", reason=err_str)
 
-#-----------------------------------------------------------------------------
+
+# -----------------------------------------------------------------------------
 # register
-#-----------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
 
-def register(username, password):
-
+def register(username, password, salt):
     '''
         register
         Returns the view for the register
     '''
 
-    #register = True
-    register = sql_db.check_user_exist(username) # check whether the name has been used or not, if not, change the value of register
-    err_str = "Username in used"
+    # register = True
+    register = sql_db.check_user_exist(
+        username)  # check whether the name has been used or not, if not, change the value of register
+    err_str = "Username in use"
 
-    if register == False: 
+    if register == False:
         # false when the user name is not exist/ not been used
         print(username)
         print(password)
-        #sql_db.add_user(username, password, str(generate_RSA_keypair()), admin=0)
-        sql_db.add_user(username, password, generate_RSA_keypair().decode(), admin=0)
-        #sql_db.add_user(username, password, None, admin=0)
+        # sql_db.add_user(username, password, str(generate_RSA_keypair()), admin=0)
+        sql_db.add_user(username, password, salt, generate_RSA_keypair().decode(), admin=0)
+        # sql_db.add_user(username, password, None, admin=0)
         print()
         print("this is after register: ")
         print(sql_db.check_user_exist(username))
@@ -98,17 +107,20 @@ def register(username, password):
     else:
         return page_view("invalid", reason=err_str)
 
-#-----------------------------------------------------------------------------
+
+# -----------------------------------------------------------------------------
 
 def register_form():
-     return page_view("register")
+    return page_view("register")
 
-#-----------------------------------------------------------------------------
+
+# -----------------------------------------------------------------------------
 
 def display_valid_login_page(username):
     return page_view("valid_login", friend_ls=sql_db.get_friendlist(username))
 
-#-----------------------------------------------------------------------------
+
+# -----------------------------------------------------------------------------
 
 def generate_RSA_keypair():
     key = RSA.generate(2048)
@@ -130,9 +142,24 @@ def generate_RSA_keypair():
 
     return public_key
 
-#-----------------------------------------------------------------------------
+
+def add_friend_form():
+    return page_view("/add_friend")
+
+
+def add_friend(user_id, friend_name):
+    print(user_id)
+    print(sql_db.add_friend(user_id, friend_name))
+    print(sql_db.get_friendlist(user_id))
+    return page_view("/valid_login")
+
+
+def choose_friend_form():
+    return page_view("/choose_friend_to_chat")
+
+# -----------------------------------------------------------------------------
 # About
-#-----------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
 
 def about():
     '''
@@ -142,25 +169,24 @@ def about():
     return page_view("about", garble=about_garble())
 
 
-
 # Returns a random string each time
 def about_garble():
     '''
         about_garble
         Returns one of several strings for the about page
     '''
-    garble = ["leverage agile frameworks to provide a robust synopsis for high level overviews.", 
-    "iterate approaches to corporate strategy and foster collaborative thinking to further the overall value proposition.",
-    "organically grow the holistic world view of disruptive innovation via workplace change management and empowerment.",
-    "bring to the table win-win survival strategies to ensure proactive and progressive competitive domination.",
-    "ensure the end of the day advancement, a new normal that has evolved from epistemic management approaches and is on the runway towards a streamlined cloud solution.",
-    "provide user generated content in real-time will have multiple touchpoints for offshoring."]
+    garble = ["leverage agile frameworks to provide a robust synopsis for high level overviews.",
+              "iterate approaches to corporate strategy and foster collaborative thinking to further the overall value proposition.",
+              "organically grow the holistic world view of disruptive innovation via workplace change management and empowerment.",
+              "bring to the table win-win survival strategies to ensure proactive and progressive competitive domination.",
+              "ensure the end of the day advancement, a new normal that has evolved from epistemic management approaches and is on the runway towards a streamlined cloud solution.",
+              "provide user generated content in real-time will have multiple touchpoints for offshoring."]
     return garble[random.randint(0, len(garble) - 1)]
 
 
-#-----------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
 # Debug
-#-----------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
 
 def debug(cmd):
     try:
@@ -168,10 +194,11 @@ def debug(cmd):
     except:
         pass
 
-#-----------------------------------------------------------------------------
+
+# -----------------------------------------------------------------------------
 # 404
 # Custom 404 error page
-#-----------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
 
 def handle_errors(error):
     error_type = error.status_line

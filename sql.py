@@ -51,6 +51,7 @@ class SQLDatabase():
             Id INT,
             username TEXT,
             password TEXT,
+            salt TEXT,
             pk TEXT,
             friendlist TEXT,
             admin INTEGER DEFAULT 0
@@ -58,7 +59,7 @@ class SQLDatabase():
 
         self.commit()
         # Add our admin user
-        self.add_user('admin', admin_password, None, admin=1)
+        self.add_user('admin', admin_password, None, None, admin=1)
 
     #-----------------------------------------------------------------------------#
     #-----------------------------------------------------------------------------#
@@ -69,14 +70,14 @@ class SQLDatabase():
     #-----------------------------------------------------------------------------#
 
     # Add a user to the database
-    def add_user(self,username, password, pk, admin=0):
+    def add_user(self,username, password, salt, pk, admin=0):
         sql_cmd = """
                 INSERT INTO Users
                 (Id,username,password,pk,admin)
-                VALUES({id}, '{username}', '{password}', '{pk}',  {admin})
+                VALUES({id}, '{username}', '{password}', '{salt}', {pk}',  {admin})
             """
 
-        sql_cmd = sql_cmd.format(id=0,username=username, password=password, pk=pk, admin=admin)
+        sql_cmd = sql_cmd.format(id=0,username=username, password=password, salt = salt, pk=pk, admin=admin)
 
         self.execute(sql_cmd)
         self.commit()
@@ -148,24 +149,43 @@ class SQLDatabase():
             friend_list.append(friend_id)
         else:
             # already have a friend list
-            friend_list = eval(str_friendls)
+            #friend_list = eval(str_friendls)
             friend_list.append(friend_id)
                 
-        str_friendls = str(friend_id) 
+        str_friendls = str(friend_list)
+        print(str_friendls)
              
         # update the friend list into database 
         sql_query = """
             UPDATE Users 
-            SET friendlist = str_friends,
+            SET friendlist = '{str_friendls}'
             WHERE username = '{username}'
         """ 
-        sql_query = sql_query.format(username=user_id)
+        sql_query = sql_query.format(str_friendls=str_friendls, username=user_id)
         self.execute(sql_query)
         self.commit()
-            
-        msg = "Successfully add friend into friend list"
-        return msg
 
+        msg = "Successfully add friend into friend list"
+
+        print(self.get_friendlist(user_id))
+
+        return msg
+    
+    def get_salt(self,username):
+        sql_query = """
+                SELECT salt 
+                FROM Users
+                WHERE username = '{username}'
+            """                   
+        sql_query = sql_query.format(username=username)
+        self.execute(sql_query)
+        self.commit()
+        
+        if self.cur.fetchone():
+            salt = self.cur.fetchone()
+            return salt
+        else:
+            return False
         
     def get_friendlist(self, username):
         # get the friend list for the user
@@ -203,13 +223,13 @@ class SQLDatabase():
         else:
             # user not found
             return False
-"""
+
 # create our database
 database = SQLDatabase("database.db") 
 database.database_setup('admin')
-database.add_user('irene', 'abc',None,admin=0)
-database.add_user('kkk', '134',None,admin=0)
-print(database.check_credentials('irene','abc'))
-print(database.check_credentials('kkk', '123'))
-#print(database.add_friend('irene', 'kkk'))
-"""
+database.add_user('irene', 'abc',None,admin=0) #true
+database.add_user('kkk', '134',None,admin=0)  #true
+print(database.check_credentials('irene','abc')) #true
+print(database.check_credentials('kkk', '123')) #false
+print(database.add_friend('irene', 'kkk'))
+print(database.get_friendlist('irene'))

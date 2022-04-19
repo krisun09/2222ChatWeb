@@ -7,6 +7,8 @@
 from bottle import route, get, post, error, request, static_file
 
 import model
+#import os
+#import hashlib
 
 #-----------------------------------------------------------------------------
 # Static file paths
@@ -109,14 +111,14 @@ def post_login():
 
 #-----------------------------------------------------------------------------
 
-@post('/valid_login')
-def valid_login_controller():
-    if request.POST.get("AddFriend"):
-        action = "Add_friend"
-        print(action)
-    elif request.POST.get("ChooseFriend"):
-        action = "Choose_friend"
-        print(action)
+# @post('/valid_login')
+# def valid_login_controller():
+#     if request.POST.get("AddFriend"):
+#         action = "Add_friend"
+#         print(action)
+#     elif request.POST.get("ChooseFriend"):
+#         action = "Choose_friend"
+#         print(action)
 #-----------------------------------------------------------------------------
 
 @get('/about')
@@ -156,8 +158,40 @@ def post_register():
     username = request.forms.get('username')
     password = request.forms.get('password')
     
+    # Hash and salt the password here
+    #salt = os.urandom(32)
+    #hashed_pwd = hashlib.pbkdf2_hmac('sha256', password.encode('utf-8'), salt, 100000)
+    #salt = salt.decode('utf-8')
     # Call the appropriate method
     return model.register(username, password)
+
+#-----------------------------------------------------------------------------
+@get('/add_friend')
+def get_add_friend_controller():
+    return model.add_friend_form()
+# Attempt to add friend
+@post('/add_friend')
+def post_add_friend():
+    friend_username = request.forms.get("friendUsername")
+    # hard coded username
+    return model.add_friend("kk", friend_username)
+
+    # TODO: identify user and pass username to server
+
+#-----------------------------------------------------------------------------
+@get('/choose_friend_to_chat')
+def get_choose_friend():
+    # TODO: identify user and pass username to server
+    return model.choose_friend_form()
+
+@post('/choose_friend_to_chat')
+def post_choose_friend():
+    friend_name = request.forms.get("friendName")
+    # TODO: identify user and pass username to server
+
+    # Handle the form processing
+    # username = request.forms.get('username')
+    # return model.choose_friend_form(username)
 
 #-----------------------------------------------------------------------------
 # Help with debugging
