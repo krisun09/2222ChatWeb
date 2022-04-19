@@ -109,10 +109,14 @@ def post_login():
 
 #-----------------------------------------------------------------------------
 
-# @get('/valid_login')
-# def valid_login_controller():
-#     model.display_valid_login_page()
-
+@post('/valid_login')
+def valid_login_controller():
+    if request.POST.get("AddFriend"):
+        action = "Add_friend"
+        print(action)
+    elif request.POST.get("ChooseFriend"):
+        action = "Choose_friend"
+        print(action)
 #-----------------------------------------------------------------------------
 
 @get('/about')
