@@ -136,23 +136,26 @@ class SQLDatabase():
             return msg
                 
         # get the friend list for the user     
-        str_friendls = self.get_friendlist(user_id) # get the friend list
-        if str_friendls == False:
+        friendls = self.get_friendlist(user_id) # get the friend list
+        if friendls == False:
             msg = "Please try to log in, username not found."
             return msg
         
-        if str_friendls == None:
+        if len(friendls) == 0:
             # friend list is empty for this user
             # create a friend list for him/she
-            friend_list = []
-            friend_list.append(friend_id)
+            print("I have no friend: ")
+            friendls.append(friend_id)
         else:
-            # already have a friend list
-            friend_list = eval(str_friendls)
-            friend_list.append(friend_id)
-                
-        str_friendls = str(friend_list)
-        print(str_friendls)
+            print("I have friend already: ")
+            print(friendls)
+            # already have a friend list     
+            friendls.append(friend_id)
+            
+        str_friendlist = ""
+        for friend in friendls:
+            str_friendlist += friend
+            str_friendlist += ", "
              
         # update the friend list into database 
         sql_query = """
@@ -160,9 +163,10 @@ class SQLDatabase():
             SET friendlist = '{str_friendls}'
             WHERE username = '{username}'
         """ 
-        sql_query = sql_query.format(str_friendls=str_friendls, username=user_id)
+        sql_query = sql_query.format(str_friendls=str_friendlist, username=user_id)
         self.execute(sql_query)
         self.commit()
+        
 
         msg = "Successfully add friend into friend list"
 
@@ -182,9 +186,10 @@ class SQLDatabase():
         self.execute(sql_query)
         self.commit()
         
-        if self.cur.fetchone():
+        if self.cur.fetchmany():
             # username exist in database
-            friend_list = self.cur.fetchone()
+            friend_list = self.cur.fetchmany()
+            print(friend_list)
             return friend_list
         else:
             # user not found
@@ -207,7 +212,7 @@ class SQLDatabase():
         else:
             # user not found
             return False
-
+'''
 # create our database
 database = SQLDatabase("database.db") 
 database.database_setup('admin')
@@ -217,3 +222,4 @@ print(database.check_credentials('irene','abc')) #true
 print(database.check_credentials('kkk', '123')) #false
 print(database.add_friend('irene', 'kkk'))
 print(database.get_friendlist('irene'))
+'''
