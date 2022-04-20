@@ -184,23 +184,21 @@ def post_add_friend():
     user = get_username_cookie()
     return model.add_friend(user, friend_username)
 
-    # TODO: identify user and pass username to server
-
 #-----------------------------------------------------------------------------
 @get('/choose_friend_to_chat')
 def get_choose_friend():
-    # TODO: identify user and pass username to server
     return model.choose_friend_form()
 
 @post('/choose_friend_to_chat')
 def post_choose_friend():
     friend_name = request.forms.get("friendName")
     message = request.forms.get("message")
-    # TODO: identify user and pass username to server
+    user = get_username_cookie()
 
     # Handle the form processing
     # username = request.forms.get('username')
-    return model.choose_friend("kk", friend_name, message)
+
+    return model.choose_friend(user, friend_name, message)
 
 #-----------------------------------------------------------------------------
 # Help with debugging

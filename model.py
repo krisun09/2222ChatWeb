@@ -10,6 +10,8 @@ import view
 import random
 import sql
 from Crypto.PublicKey import RSA
+import bcrypt
+
 
 # Initialise our views, all arguments are defaults for the template
 page_view = view.View()
@@ -17,6 +19,8 @@ page_view = view.View()
 database_args = "database.db"
 sql_db = sql.SQLDatabase(database_args)
 sql_db.database_setup(admin_password='admin')
+
+salt = bcrypt.gensalt()
 
 
 # -----------------------------------------------------------------------------
@@ -62,7 +66,7 @@ def login_check(username, password):
     err_str = "Incorrect username or password"
 
     login = sql_db.check_credentials(username,
-                                     password)  # it will change to false if username and password does not match
+                                     process_enc_pwd(password))  # it will change to false if username and password does not match
     if login:
         print("this is after login: ")
         print(sql_db.check_user_exist(username))
@@ -88,15 +92,15 @@ def register(username, password):
     err_str = "Username in use"
 
     if register == False:
-        # false when the user name is not exist/ not been used
+        # false when the user name does not exist / haven't been used
         print(username)
         print(password)
-        # sql_db.add_user(username, password, str(generate_RSA_keypair()), admin=0)
-        sql_db.add_user(username, password, generate_RSA_keypair().decode(), admin=0)
-        # sql_db.add_user(username, password, None, admin=0)
-        print()
-        print("this is after register: ")
-        print(sql_db.check_user_exist(username))
+
+        # salt and hash the enc_pwd here
+        secure_pwd = process_enc_pwd(password)
+
+        sql_db.add_user(username, secure_pwd, generate_RSA_keypair().decode(), admin=0)
+        print(f"register: check_user_exist after add_user: {sql_db.check_user_exist(username)}")
 
         # register done, go back to login page
         return page_view("login")
@@ -189,6 +193,25 @@ def about_garble():
               "ensure the end of the day advancement, a new normal that has evolved from epistemic management approaches and is on the runway towards a streamlined cloud solution.",
               "provide user generated content in real-time will have multiple touchpoints for offshoring."]
     return garble[random.randint(0, len(garble) - 1)]
+
+
+# -----------------------------------------------------------------------------
+# Cryptography
+# -----------------------------------------------------------------------------
+
+def process_enc_pwd(enc_pwd):
+    # use bcrypt over SHA512 is that bcrypt is designed to be slow.
+    """
+        salt + hash a string
+    """
+    print(f"original pwd: {enc_pwd}")
+
+    hashed = bcrypt.hashpw(b'enc_pwd', salt)
+
+    print(f"salt: {salt}")
+    print(f"hashed: {hashed}")
+
+    return hashed.decode("utf-8")
 
 
 # -----------------------------------------------------------------------------

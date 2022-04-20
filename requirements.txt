@@ -1,2 +1,4 @@
 bottle
 sqlite3
+pyCryptodome
+bcrypt
