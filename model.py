@@ -5,6 +5,7 @@
     It should exist as a separate layer to any database or data structure that you might be using
     Nothing here should be stateful, if it's stateful let the database handle it
 '''
+import controller
 import view
 import random
 import sql
@@ -62,10 +63,10 @@ def login_check(username, password):
 
     login = sql_db.check_credentials(username,
                                      password)  # it will change to false if username and password does not match
-
     if login:
         print("this is after login: ")
         print(sql_db.check_user_exist(username))
+        print(f"validLogin:{username}")
         return page_view("valid_login", name=username, friend_ls=sql_db.get_friendlist(username))
     else:
         return page_view("invalid", reason=err_str)
@@ -146,17 +147,22 @@ def add_friend(user_id, friend_name):
     print(user_id)
     print(sql_db.add_friend(user_id, friend_name))
     print(sql_db.get_friendlist(user_id))
-    return page_view("/valid_login")
+    username = controller.get_username_cookie()
+    return page_view("valid_login", name=username, friend_ls=sql_db.get_friendlist(username))
 
 
 def choose_friend_form():
-    return page_view("/choose_friend_to_chat")
+    username = controller.get_username_cookie()
+    return page_view("/choose_friend_to_chat", friend_ls=sql_db.get_friendlist(username))
+
 
 def choose_friend(user, friendID, message):
     print(user)
     print(friendID)
     print(message)
-    return page_view("/valid_login")
+    username = controller.get_username_cookie()
+    return page_view("valid_login", name=username, friend_ls=sql_db.get_friendlist(username))
+
 
 # -----------------------------------------------------------------------------
 # About
