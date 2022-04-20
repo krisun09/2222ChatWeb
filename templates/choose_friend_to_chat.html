@@ -3,6 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <title>Chat</title>
+    <script src="js/register.js"></script>
+    <script type = "text/javascript" src="js/register.js"></script>
 </head>
 <body>
 <div class="form_vertical">
@@ -16,7 +18,9 @@
          <br>
             <label for="message">Type in your message:</label>
          <div>
-            <textarea name="message" rows="6" cols="50"></textarea>
+            <textarea name="message" rows="6" cols="50" 
+            onclick="sign_message(document.getElementById(message).value)"></textarea>
+
          </div>
          <br>
          <a href="/valid_login">

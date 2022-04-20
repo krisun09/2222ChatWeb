@@ -1,3 +1,5 @@
+// handles cookies, local storage, session storage, and front end alarts
+
 function addFriendWindowAlert(){
     var message = "You have successfully sent the request";
     alert(message);
