@@ -3,13 +3,8 @@
 // export public key and send it to the server
 // export private key and store it locally
 
-async function hashing(password){
-    // passpord is the thing that the user put in
-    
-}
-
 async function generateKeyPairs() {
-    return await window.crypto.subtle.generateKey(
+    return window.crypto.subtle.generateKey(
         {
             name: "RSA-OAEP",
             modulusLength: 2048,
@@ -38,14 +33,37 @@ async function generateKeyPairs() {
         alert(output); //testing
 
         // export key value
-        const pubk = window.exportCryptoKey(public_key);
-        const prik = window.exportCryptoKey(private_key);
-        // store the private key in local
-        localStorage.setItem('private key', prik);
-        console.log(pubk);
-        console.log(prik);
+        //const pubk = window.exportCryptoKey(public_key);
+        //const prik = window.exportCryptoKey(private_key);
+        const pubk = crypto.subtle.exportKey(
+            'jwk',
+            key.publicKey
+        ).then(function(pubk){
+            console.log(pubk);
+            alert("jwk already")
+        })
+        .catch(function(err){
+            console.log(err);
+        })
 
-        var encrypted = encryptMessage("hello", pubk);
+        const prik = crypto.subtle.exportKey(
+            'jwk',
+            key.privateKey
+        ).then(function(prik){
+            console.log(prik);
+            alert("jwk already")
+        })
+        .catch(function(err){
+            console.log(err);
+        })
+
+
+        // store the private key in local
+        //localStorage.setItem('private key', prik);
+        //console.log(pubk);
+        //console.log(prik);
+
+        var encrypted = window.encryptMessage("hello", pubk);
         window.decryptMessage(encrypted, prik);
 
     })
@@ -77,8 +95,8 @@ async function generate_SEK(){
 async function importPublicKey(jwk) {
     console.log("this is jwk");
     console.log(jwk);
-    return await window.crypto.subtle.importKey(
-        "jwk",
+    return window.crypto.subtle.importKey(
+        'jwk',
         jwk,
         {    
             name: 'RSA-OAEP',
@@ -96,8 +114,8 @@ async function importPublicKey(jwk) {
   }
 
 async function importPrivateKey(jwk) {
-    return await window.crypto.subtle.importKey(
-        "jwk",
+    return window.crypto.subtle.importKey(
+        'jwk',
         jwk,
         {    
             name: 'RSA-OAEP',
@@ -115,7 +133,7 @@ async function importPrivateKey(jwk) {
   }
 
 async function exportCryptoKey(key) {
-    return await window.crypto.subtle.exportKey(
+    return window.crypto.subtle.exportKey(
       "jwk",
       key
     )
@@ -132,14 +150,33 @@ async function exportCryptoKey(key) {
     
 }
 
-async function encryptMessage(msg, public_key){
+function encryptMessage(msg, public_key){
     // msg is the text we want to encrypt
     // public_key is the friend who you want to talk to 's public key
-    var pub_key =  window.importPublicKey(public_key); // back to Crypto key object
-    
-    
+    //const pub_key =  await window.importPublicKey(public_key); // back to Crypto key object
+    console.log("this is the public key");
+    console.log(public_key);
+    const pub_key = crypto.subtle.importKey(
+        'jwk',
+        pub_key,
+        {
+            name: 'RSA-OAEP',
+            hash: 'SHA-256'
+        },
+        true,
+        ['encrypt']
+    )
+    .then(function(pub_key){
+        console.log(pub_key)
+    })
+    .catch(function(err){
+        console.log(err)
+    })
+
+
     var encoded_msg = window.str2ab(msg);
-    return await crypto.subtle.encrypt(
+
+    return crypto.subtle.encrypt(
         {
             name: 'RSA-OAEP'
         },
@@ -147,6 +184,8 @@ async function encryptMessage(msg, public_key){
         encoded_msg // data that want to encrypt -- should be an array buffer format
     )
     .then(function(encrypted){
+        alert("here at encryption")
+        console.log(encrypted)
         var encrypted_msg = new Uint8Array(encrypted); // return an arraybuffer of the encrypted message
         alert(encrypted_msg);
     })
@@ -155,10 +194,27 @@ async function encryptMessage(msg, public_key){
     })
 }
 
-async function decryptMessage(encrypted_msg, private_key){
-    var pri_key = window.importPrivateKey(private_key);
+function decryptMessage(encrypted_msg, private_key){
+    //const pri_key = await window.importPrivateKey(private_key);
+    console.log("this is the private key");
+    console.log(private_key);
+    const pri_key = crypto.subtle.importKey(
+        'jwk',
+        private_key,
+        {
+            name: 'RSA-OAEP',
+            hash: 'SHA-256'
+        },
+        true,
+        ['decrypt']
+    ).then(function(pri_key){
+        console(pri_key);
+    })
+    .catch(function(err){
+        console.log(err);
+    })
 
-    return await crypto.subtle.decrypt(
+    return crypto.subtle.decrypt(
         {
             name: 'RSA-OAEP'
         },
@@ -166,6 +222,8 @@ async function decryptMessage(encrypted_msg, private_key){
         encrypted_msg
     )
     .then(function(decrypted){
+        alert("here at decryption")
+        console.log(decrypted)
         var decrypted_msg = new Uint8Array(decrypted);
         // convert decrypted msg back to string
         var str_msg = widow.ab2str(decrypted_msg);
