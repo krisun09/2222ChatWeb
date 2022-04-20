@@ -3,7 +3,7 @@
 // export public key and send it to the server
 // export private key and store it locally
 
-function generateKeyPairs() {
+async function generateKeyPairs() {
     return window.crypto.subtle.generateKey(
         {
             name: "RSA-OAEP",
@@ -13,45 +13,7 @@ function generateKeyPairs() {
         },
         true,
         ['encrypt', 'decrypt']
-    )
-    .then(function(key){
-        var output = "now you have a key pair:  "
-        var public_key = key.publicKey;
-        var private_key = key.privateKey;
-
-        if (public_key == undefined){
-            output += "public key generate fail ";
-        } else{
-            output += "public key generate succeed "; 
-        }
-        if (private_key == undefined){
-            output += "private key generate fail";
-        }else{
-            output += "private key generate succeed "; 
-        }
-
-        alert(output); //testing
-
-        // export key value
-        //const pubk = window.exportCryptoKey(public_key);
-        //const prik = window.exportCryptoKey(private_key);
-        const pubk =  window.exportCryptoKey(key.publicKey);
-
-        const prik =  window.exportCryptoKey(key.privateKey);
-
-
-        // store the private key in local
-        //localStorage.setItem('private key', prik);
-        //console.log(pubk);
-        //console.log(prik);
-        
-        var encrypted =  window.encryptMessage("hello", pubk);
-        window.decryptMessage(encrypted, prik);
-
-    })
-    .catch(function(err){
-        console.log(err);
-    })
+    );
 }
 
 function generate_SEK(){
@@ -74,7 +36,7 @@ function generate_SEK(){
     })
 }
 
-function importPublicKey(jwk) {
+async function importPublicKey(jwk) {
     console.log("this is jwk");
     console.log(jwk);
     return window.crypto.subtle.importKey(
@@ -85,17 +47,11 @@ function importPublicKey(jwk) {
             hash: 'SHA-256'
         },
       true,
-      ['encrypt', 'decrypt']
-    )
-    .then(function(publickey){
-        console.log(publickey);
-    })
-    .catch(function(err){
-        console.log(err);
-    })
+      ['encrypt']
+    );
   }
 
-function importPrivateKey(jwk) {
+async function importPrivateKey(jwk) {
     return window.crypto.subtle.importKey(
         'jwk',
         jwk,
@@ -104,60 +60,23 @@ function importPrivateKey(jwk) {
             hash: 'SHA-256'
         },
       true,
-      ['encrypt','decrypt']
-    )
-    .then(function(privatekey){
-        console.log(privatekey);
-    })
-    .catch(function(err){
-        console.log(err);
-    })
+      ['decrypt']
+    );
   }
 
-function exportCryptoKey(key) {
+async function exportCryptoKey(key) {
     return window.crypto.subtle.exportKey(
       "jwk",
       key
-    )
-    
-    .then(function(jwk){
-        //alert(exported);
-        //var jsonString = JSON.stringify(jwk);
-        //alert(jsonString);
-        console.log("this is jwk format: ");
-        console.log(jwk);
-        console.log(JSON.stringify(jwk));
-        //return jwk;
-    })
-    .catch(function(err){
-        console.log(err);
-    })
-    
+    ); 
 }
 
-function encryptMessage(msg, public_key){
+async function encryptMessage(msg, public_key){
     // msg is the text we want to encrypt
     // public_key is the friend who you want to talk to 's public key
-    //const pub_key =  await window.importPublicKey(public_key); // back to Crypto key object
     console.log("this is the public key");
     console.log(public_key);
-    var pub_key = crypto.subtle.importKey(
-        'jwk',
-        public_key,
-        {
-            name: 'RSA-OAEP',
-            hash: 'SHA-256'
-        },
-        true,
-        ['encrypt']
-    )
-    .then(function(pub_key){
-        console.log(pub_key)
-    })
-    .catch(function(err){
-        console.log(err)
-    })
-
+    let pub_key = await window.importPublicKey(public_key);
 
     var encoded_msg = window.str2ab(msg);
 
@@ -167,37 +86,13 @@ function encryptMessage(msg, public_key){
         },
         pub_key, 
         encoded_msg // data that want to encrypt -- should be an array buffer format
-    )
-    .then(function(encrypted){
-        alert("here at encryption")
-        console.log(encrypted)
-        var encrypted_msg = new Uint8Array(encrypted); // return an arraybuffer of the encrypted message
-        alert(encrypted_msg);
-    })
-    .catch(function(err){
-        console.log(err);
-    })
+    );
 }
 
-function decryptMessage(encrypted_msg, private_key){
-    //const pri_key = await window.importPrivateKey(private_key);
+async function decryptMessage(encrypted_msg, private_key){
     console.log("this is the private key");
     console.log(private_key);
-    var pri_key = crypto.subtle.importKey(
-        'jwk',
-        private_key,
-        {
-            name: 'RSA-OAEP',
-            hash: 'SHA-256'
-        },
-        true,
-        ['decrypt']
-    ).then(function(pri_key){
-        console.log(pri_key);
-    })
-    .catch(function(err){
-        console.log(err);
-    })
+    let pri_key = await window.importPrivateKey(private_key);
 
     return crypto.subtle.decrypt(
         {
@@ -205,19 +100,7 @@ function decryptMessage(encrypted_msg, private_key){
         },
         pri_key,
         encrypted_msg
-    )
-    .then(function(decrypted){
-        alert("here at decryption")
-        console.log(decrypted)
-        var decrypted_msg = new Uint8Array(decrypted);
-        // convert decrypted msg back to string
-        var str_msg = widow.ab2str(decrypted_msg);
-        alert(str_msg)
-
-    })
-    .catch(function(err){
-        console.log(err);
-    })
+    );
 }
 
 function ab2str(buf) {
@@ -233,4 +116,18 @@ function str2ab(str) {
 }
 
 
-window.generateKeyPairs();
+let key = await window.generateKeyPairs();
+
+let public_key = key.publicKey;
+let private_key = key.privateKey;
+
+let exported_pub = await window.exportCryptoKey(public_key);
+let exported_pri = await window.exportCryptoKey(private_key);
+
+
+let encrypted_result = await window.encryptMessage("hello",exported_pub);
+
+let decrtpted_result = await window.decryptMessage(encrypted_result, exported_pri);
+
+console.log(decrtpted_result);
+console.log(window.ab2str(decrtpted_result));
