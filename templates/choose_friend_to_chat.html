@@ -9,8 +9,20 @@
     <p>Here is your friend list: ${friend_ls}</p>
     <h2>Type in your friend's name to send a message</h2>
      <form method="post" action="/choose_friend_to_chat">
-        <label for="friendName">Friend's Name:</label>
-        <input type="text" name="friendName">
+         <div>
+            <label for="friend_name">Friend's Name:</label>
+            <input type="text" name="friendName">
+         </div>
+         <br>
+            <label for="message">Type in your message:</label>
+         <div>
+            <textarea name="message" rows="6" cols="50"></textarea>
+         </div>
+         <br>
+         <a href="/valid_login">
+                <input type="submit" value="Send" class="button button1">
+         </a>
+
      </form>
 </div>
 </body>

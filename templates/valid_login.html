@@ -1,4 +1,16 @@
-<h1>This username-password combination is valid, welcome ${name}!</h1>
+<head>
+    <meta charset="UTF-8">
+    <title>
+        Valid Login
+    </title>
+    <script src="js/main.js"></script>
+    <script type = "text/javascript" src="js/main.js"></script>
+    <script>
+        let name = sessionStorage.getItem('username');
+        console.log(name)
+    </script>
+</head>
+<h1 id="name">This username-password combination is valid, welcome ${name}!</h1>
 <div>
     <h2>Here is your friend list:</h2>
 </div>
