@@ -105,19 +105,15 @@ def post_login():
     password = request.forms.get('password')
 
     # Call the appropriate method
-    bottle.response.set_cookie("username", username)
+    bottle.response.set_cookie("username", username, None, max_age=60*60*24*30)
+
     return model.login_check(username, password)
 
 # A cookie is a named piece of text stored in the user’s browser profile.
 # You can access previously defined cookies via Request.get_cookie() and set new cookies with Response.set_cookie():
-@route('/login')
-def hello_again():
-    if request.get_cookie("visited"):
-        return "Welcome back! Nice to see you again"
-    else:
-        response.set_cookie("visited", "yes")
-        return "Hello there! Nice to meet you"
-
+def get_username_cookie():
+    print(f"cookie user: {request.get_cookie('username')}")
+    return request.get_cookie("username")
 #-----------------------------------------------------------------------------
 
 # @post('/valid_login')
@@ -179,8 +175,8 @@ def get_add_friend_controller():
 def post_add_friend():
     friend_username = request.forms.get("friendUsername")
     # hard coded username
-
-    return model.add_friend("kk", friend_username)
+    user = get_username_cookie()
+    return model.add_friend(user, friend_username)
 
     # TODO: identify user and pass username to server
 
