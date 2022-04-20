@@ -3,9 +3,13 @@
 // export public key and send it to the server
 // export private key and store it locally
 
+async function hashing(password){
+    // passpord is the thing that the user put in
+    
+}
 
-function generateKeyPairs() {
-    return crypto.subtle.generateKey(
+async function generateKeyPairs() {
+    return await window.crypto.subtle.generateKey(
         {
             name: "RSA-OAEP",
             modulusLength: 2048,
@@ -34,12 +38,14 @@ function generateKeyPairs() {
         alert(output); //testing
 
         // export key value
-        var pubk = window.exportCryptoKey(public_key);
-        var prik = window.exportCryptoKey(private_key);
+        const pubk = window.exportCryptoKey(public_key);
+        const prik = window.exportCryptoKey(private_key);
+        // store the private key in local
+        localStorage.setItem('private key', prik);
         console.log(pubk);
         console.log(prik);
 
-        var encrypted = window.encryptMessage("hello", pubk);
+        var encrypted = encryptMessage("hello", pubk);
         window.decryptMessage(encrypted, prik);
 
     })
@@ -48,11 +54,11 @@ function generateKeyPairs() {
     })
 }
 
-function generate_SEK(){
+async function generate_SEK(){
     // symmtric key used to sign ? maybe
     // need to generate every time when alice and bob want to talk
     // share between alice and bob ?
-    return crypto.subtle.generateKey(
+    return await window.crypto.subtle.generateKey(
         {
             name: 'AES-GCM',
             length: 256,
@@ -69,15 +75,17 @@ function generate_SEK(){
 }
 
 async function importPublicKey(jwk) {
+    console.log("this is jwk");
+    console.log(jwk);
     return await window.crypto.subtle.importKey(
         "jwk",
         jwk,
         {    
-            name: "RSA-OAEP",
-            hash: "SHA-256"
+            name: 'RSA-OAEP',
+            hash: 'SHA-256'
         },
       true,
-      ['encrypt']
+      ['encrypt', 'decrypt']
     )
     .then(function(publickey){
         console.log(publickey);
@@ -92,11 +100,11 @@ async function importPrivateKey(jwk) {
         "jwk",
         jwk,
         {    
-            name: "RSA-OAEP",
-            hash: "SHA-256"
+            name: 'RSA-OAEP',
+            hash: 'SHA-256'
         },
       true,
-      ['decrypt']
+      ['encrypt','decrypt']
     )
     .then(function(privatekey){
         console.log(privatekey);
@@ -107,24 +115,31 @@ async function importPrivateKey(jwk) {
   }
 
 async function exportCryptoKey(key) {
-    const exported = await window.crypto.subtle.exportKey(
+    return await window.crypto.subtle.exportKey(
       "jwk",
       key
-    );
-    //alert(exported);
-    var jsonString = JSON.stringify(exported);
-    //alert(jsonString);
-    console.log(jsonString);
+    )
+    .then(function(jwk){
+        //alert(exported);
+        //var jsonString = JSON.stringify(jwk);
+        //alert(jsonString);
+        console.log("this is jwk format: ");
+        console.log(jwk);
+    })
+    .catch(function(err){
+        console.log(err);
+    })
+    
 }
 
-function encryptMessage(msg, public_key){
+async function encryptMessage(msg, public_key){
     // msg is the text we want to encrypt
     // public_key is the friend who you want to talk to 's public key
-    var pub_key = window.importPublicKey(JSON.parse(public_key)); // back to Crypto key object
+    var pub_key =  window.importPublicKey(public_key); // back to Crypto key object
     
     
     var encoded_msg = window.str2ab(msg);
-    return crypto.subtle.encrypt(
+    return await crypto.subtle.encrypt(
         {
             name: 'RSA-OAEP'
         },
@@ -140,10 +155,10 @@ function encryptMessage(msg, public_key){
     })
 }
 
-function decryptMessage(encrypted_msg, private_key){
-    var pri_key = window.importPrivateKey(JSON.parse(private_key));
+async function decryptMessage(encrypted_msg, private_key){
+    var pri_key = window.importPrivateKey(private_key);
 
-    return crypto.subtle.decrypt(
+    return await crypto.subtle.decrypt(
         {
             name: 'RSA-OAEP'
         },
@@ -176,7 +191,3 @@ function str2ab(str) {
 
 
 window.generateKeyPairs();
-
-
-
-
