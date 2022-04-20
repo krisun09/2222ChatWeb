@@ -109,9 +109,15 @@ def post_login():
 
     return model.login_check(username, password)
 
+#-----------------------------------------------------------------------------
+
 # A cookie is a named piece of text stored in the user’s browser profile.
 # You can access previously defined cookies via Request.get_cookie() and set new cookies with Response.set_cookie():
 def get_username_cookie():
+    """
+        returns the current user
+    """
+
     print(f"cookie user: {request.get_cookie('username')}")
     return request.get_cookie("username")
 #-----------------------------------------------------------------------------
