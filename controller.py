@@ -103,6 +103,7 @@ def post_login():
     # Handle the form processing
     username = request.forms.get('username')
     password = request.forms.get('password')
+    print(f"postLogin pwd: {password}")
 
     # Call the appropriate method
     bottle.response.set_cookie("username", username, None, max_age=60*60*24*30)
@@ -122,14 +123,6 @@ def get_username_cookie():
     return request.get_cookie("username")
 #-----------------------------------------------------------------------------
 
-# @post('/valid_login')
-# def valid_login_controller():
-#     if request.POST.get("AddFriend"):
-#         action = "Add_friend"
-#         print(action)
-#     elif request.POST.get("ChooseFriend"):
-#         action = "Choose_friend"
-#         print(action)
 #-----------------------------------------------------------------------------
 
 @get('/about')

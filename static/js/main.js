@@ -1,9 +1,38 @@
 // handles cookies, local storage, session storage, and front end alarts
 
-function addFriendWindowAlert(){
+function addFriendWindowAlert() {
     var message = "You have successfully sent the request";
     alert(message);
 }
+
+// function listen() {
+//     const input = document.querySelector('input');
+//     const data = document.getElementById("pwd")
+
+//     input.addEventListener('input', sendToPy);
+// }
+
+// function sendToPy(data) {
+//     var event = new Event('input');
+//     el.addEventListener('input', function () { 
+//     fn();
+//     });
+//     form.addEventListener('input', function () { 
+//     anotherFn();
+//     });
+
+//     el.value = ;
+//     el.dispatchEvent(event);
+// }
+
+//     // let formData = new FormData();
+//     // formData.append('password', data);
+//     // fetch("/login",
+//     //     {
+//     //         body: formData,
+//     //         method: "post"
+//     //     });
+// }
 
 function setLocalStorage(key, value) {
     localStorage.setItem(key, value);
