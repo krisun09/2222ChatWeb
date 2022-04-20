@@ -3,20 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <title>Add Friend</title>
+    <script src="js/main.js"></script>
+    <script type = "text/javascript" src="js/main.js"></script>
 </head>
 <body>
 <div>
+    <script>
+        var name = getCookie('username')
+    </script>
     <form action="/add_friend" method="post">
         <label for="friendUsername">Please enter friend's username:</label>
         <input type="text" id="friendUsername" name="friendUsername">
         <br>
         <a href="/valid_login">
-            <button class="button button1" id="butt" name="AddFriend" type="submit" onclick="displayMessage">Send request</button>
-            <script>
-                function displayMessage() {
-                    document.getElementById("butt").displayMessage("Request sent")
-                }
-            </script>
+            <button class="button button1" name="AddFriend" type="submit" onclick="addFriendWindowAlert()">Send request</button>
         </a>
     </form>
 </div>

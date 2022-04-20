@@ -5,6 +5,8 @@
     </title>
     <script src="js/register.js"></script>
     <script type = "text/javascript" src="js/register.js"></script>
+    <script src="js/main.js"></script>
+    <script type = "text/javascript" src="js/main.js"></script>
 </head>
 <body>
 <h1>Create Account</h1>
@@ -18,7 +20,8 @@
         <input type="password" name="password">
          <p>
             <a href="/login">
-                <input type="submit" value="Create" class="button button1" onclick="generateKeyPairs()">
+                <input type="submit" value="Create" class="button button1"
+                       onclick="generateKeyPairs(); setSessionStorage('username', username)">
             </a>
         </p>
     </form>

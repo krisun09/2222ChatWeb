@@ -2,6 +2,29 @@
 // generate RSA key pairs
 // export public key and send it to the server
 // export private key and store it locally
+// test set cookies
+
+function setCookie(key, value, days) {
+    var expires = "";
+    if (days) {
+        var date = new Date();
+        date.setTime(date.getTime() + (days*24*60*60*1000));
+        expires = "; expires=" + date.toUTCString();
+    }
+    document.cookie = key + "=" + (value || "")  + expires + "; path=/";
+}
+
+function getCookie(key) {
+    var keyEQ = key + "=";
+    var ca = document.cookie.split(';');
+    for(var i=0;i < ca.length;i++) {
+        var c = ca[i];
+        while (c.charAt(0)==' ') c = c.substring(1,c.length);
+        if (c.indexOf(keyEQ) == 0) return c.substring(keyEQ.length,c.length);
+    }
+    return null;
+}
+
 
 function generateKeyPairs(username) {
     return crypto.subtle.generateKey(
@@ -28,6 +51,7 @@ function generateKeyPairs(username) {
             output += "private key generate fail";
         }else{
             output += "private key generate succeed ";
+
         }
 
         alert(output); //testing
@@ -36,11 +60,11 @@ function generateKeyPairs(username) {
         var pubk = window.exportCryptoKey(public_key);
 
         sessionStorage.setItem('puk', public_key)
-        console.log(username)
 
         var prik = window.exportCryptoKey(private_key);
-        console.log(pubk);
-        console.log(prik);
+
+        // Store private key in cookies for 15 days
+        setCookie('prik', prik, 15)
 
         var encrypted = window.encryptMessage("hello", pubk);
         window.decryptMessage(encrypted, prik);

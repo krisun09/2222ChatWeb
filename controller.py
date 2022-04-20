@@ -3,8 +3,8 @@
     You should not have anything beyond basic page loads, handling forms and 
     maybe some simple program logic
 '''
-
-from bottle import route, get, post, error, request, static_file
+import bottle
+from bottle import route, get, post, error, request, static_file, response
 
 import model
 
@@ -105,7 +105,18 @@ def post_login():
     password = request.forms.get('password')
 
     # Call the appropriate method
+    bottle.response.set_cookie("username", username)
     return model.login_check(username, password)
+
+# A cookie is a named piece of text stored in the user’s browser profile.
+# You can access previously defined cookies via Request.get_cookie() and set new cookies with Response.set_cookie():
+@route('/login')
+def hello_again():
+    if request.get_cookie("visited"):
+        return "Welcome back! Nice to see you again"
+    else:
+        response.set_cookie("visited", "yes")
+        return "Hello there! Nice to meet you"
 
 #-----------------------------------------------------------------------------
 
@@ -168,6 +179,7 @@ def get_add_friend_controller():
 def post_add_friend():
     friend_username = request.forms.get("friendUsername")
     # hard coded username
+
     return model.add_friend("kk", friend_username)
 
     # TODO: identify user and pass username to server
@@ -181,11 +193,12 @@ def get_choose_friend():
 @post('/choose_friend_to_chat')
 def post_choose_friend():
     friend_name = request.forms.get("friendName")
+    message = request.forms.get("message")
     # TODO: identify user and pass username to server
 
     # Handle the form processing
     # username = request.forms.get('username')
-    # return model.choose_friend_form(username)
+    return model.choose_friend("kk", friend_name, message)
 
 #-----------------------------------------------------------------------------
 # Help with debugging

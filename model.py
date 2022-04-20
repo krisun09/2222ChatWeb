@@ -152,6 +152,12 @@ def add_friend(user_id, friend_name):
 def choose_friend_form():
     return page_view("/choose_friend_to_chat")
 
+def choose_friend(user, friendID, message):
+    print(user)
+    print(friendID)
+    print(message)
+    return page_view("/valid_login")
+
 # -----------------------------------------------------------------------------
 # About
 # -----------------------------------------------------------------------------
