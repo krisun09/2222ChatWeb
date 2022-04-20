@@ -25,6 +25,18 @@ function getCookie(key) {
     return null;
 }
 
+function listen() {
+    const input = document.querySelector('input');
+    const data = document.getElementById("pwd");
+
+    input.addEventListener('input', sendToPy(data));
+}
+
+function sendToPy(data) {
+    data = encryptMessage(data);
+    el.dispatchEvent(data);
+}
+
 // ---------------------------------------------------------- //
 // signing purposes, ref: https://github.com/mdn/dom-examples/blob/master/web-crypto/sign-verify/rsassa-pkcs1.js
 // ---------------------------------------------------------- //
@@ -121,8 +133,8 @@ function sign_message(){
 // generate user key pair, enc and dec
 // ---------------------------------------------------------- //
 
-function generateKeyPairs(username) {
-    return crypto.subtle.generateKey(
+async function generateKeyPairs() {
+    return window.crypto.subtle.generateKey(
         {
             name: "RSA-OAEP",
             modulusLength: 2048,
@@ -131,120 +143,73 @@ function generateKeyPairs(username) {
         },
         true,
         ['encrypt', 'decrypt']
-    )
-    .then(function(key){
-        var output = "now you have a key pair:  "
-        var public_key = key.publicKey;
-        var private_key = key.privateKey;
-
-        if (public_key == undefined){
-            output += "public key generate fail ";
-        } else{
-            output += "public key generate succeed ";
-        }
-        if (private_key == undefined){
-            output += "private key generate fail";
-        }else{
-            output += "private key generate succeed ";
-
-        }
-
-        alert(output); //testing
-
-        // export key value
-        var pubk = window.exportCryptoKey(public_key);
-
-        sessionStorage.setItem('puk', public_key)
-
-        var prik = window.exportCryptoKey(private_key);
-
-        // Store private key in cookies for 15 days
-        setCookie('prik', prik, 15)
-
-        var encrypted = window.encryptMessage("hello", pubk);
-        window.decryptMessage(encrypted, prik);
-
-    })
-    .catch(function(err){
-        console.log(err);
-    })
+    );
 }
 
-
 async function importPublicKey(jwk) {
-    return await window.crypto.subtle.importKey(
-        "jwk",
+    console.log("this is jwk");
+    console.log(jwk);
+    return window.crypto.subtle.importKey(
+        'jwk',
         jwk,
         {
-            name: "RSA-OAEP",
-            hash: "SHA-256"
+            name: 'RSA-OAEP',
+            hash: 'SHA-256'
         },
       true,
       ['encrypt']
-    )
-    .then(function(publickey){
-        console.log(publickey);
-    })
-    .catch(function(err){
-        console.log(err);
-    })
+    );
   }
 
 async function importPrivateKey(jwk) {
-    return await window.crypto.subtle.importKey(
-        "jwk",
+    return window.crypto.subtle.importKey(
+        'jwk',
         jwk,
         {
-            name: "RSA-OAEP",
-            hash: "SHA-256"
+            name: 'RSA-OAEP',
+            hash: 'SHA-256'
         },
       true,
       ['decrypt']
-    )
-    .then(function(privatekey){
-        console.log(privatekey);
+    );
+  }
+
+async function exportCryptoKey(key) {
+    return window.crypto.subtle.exportKey(
+      "jwk",
+      key
+    );
+}
+        //return jwk;
     })
     .catch(function(err){
         console.log(err);
     })
-  }
-
-async function exportCryptoKey(key) {
-    const exported = await window.crypto.subtle.exportKey(
-      "jwk",
-      key
-    );
-    //alert(exported);
-    var jsonString = JSON.stringify(exported);
-    //alert(jsonString);
-    console.log(jsonString);
 }
 
-function encryptMessage(msg, public_key){
+
+async function encryptMessage(msg, public_key){
     // msg is the text we want to encrypt
     // public_key is the friend who you want to talk to 's public key
-    var pub_key = window.importPublicKey(JSON.parse(public_key)); // back to Crypto key object
-
+    console.log("this is the public key");
+    console.log(public_key);
+    let pub_key = await window.importPublicKey(public_key);
 
     var encoded_msg = window.str2ab(msg);
+
     return crypto.subtle.encrypt(
         {
             name: 'RSA-OAEP'
         },
         pub_key,
         encoded_msg // data that want to encrypt -- should be an array buffer format
-    )
-    .then(function(encrypted){
-        var encrypted_msg = new Uint8Array(encrypted); // return an arraybuffer of the encrypted message
-        alert(encrypted_msg);
-    })
-    .catch(function(err){
-        console.log(err);
-    })
+    );
 }
 
-function decryptMessage(encrypted_msg, private_key){
-    var pri_key = window.importPrivateKey(JSON.parse(private_key));
+async function decryptMessage(encrypted_msg, private_key){
+    console.log("this is the private key");
+    console.log(private_key);
+    let pri_key = await window.importPrivateKey(private_key);
 
     return crypto.subtle.decrypt(
         {
@@ -252,17 +217,7 @@ function decryptMessage(encrypted_msg, private_key){
         },
         pri_key,
         encrypted_msg
-    )
-    .then(function(decrypted){
-        var decrypted_msg = new Uint8Array(decrypted);
-        // convert decrypted msg back to string
-        var str_msg = widow.ab2str(decrypted_msg);
-        alert(str_msg)
-
-    })
-    .catch(function(err){
-        console.log(err);
-    })
+    );
 }
 
 function ab2str(buf) {
@@ -278,7 +233,23 @@ function str2ab(str) {
 }
 
 
-// window.generateKeyPairs();
+let key = await window.generateKeyPairs();
+
+let public_key = key.publicKey;
+let private_key = key.privateKey;
+
+let exported_pub = await window.exportCryptoKey(public_key);
+
+sessionStorage.setItem('puk', exported_pub)
+
+let exported_pri = await window.exportCryptoKey(private_key);
+// Store private key in cookies for 15 days
+setCookie('prik', exported_pri, 15)
 
 
+let encrypted_result = await window.encryptMessage("hello",exported_pub);
 
+let decrtpted_result = await window.decryptMessage(encrypted_result, exported_pri);
+
+console.log(decrtpted_result);
+console.log(window.ab2str(decrtpted_result));

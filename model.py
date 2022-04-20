@@ -65,8 +65,8 @@ def login_check(username, password):
     login = True
     err_str = "Incorrect username or password"
 
-    login = sql_db.check_credentials(username,
-                                     process_enc_pwd(password))  # it will change to false if username and password does not match
+    # it will change to false if username and password does not match
+    login = sql_db.check_credentials(username, process_enc_pwd(password))
     if login:
         print("this is after login: ")
         print(sql_db.check_user_exist(username))
@@ -206,7 +206,7 @@ def process_enc_pwd(enc_pwd):
     """
     print(f"original pwd: {enc_pwd}")
 
-    hashed = bcrypt.hashpw(b'enc_pwd', salt)
+    hashed = bcrypt.hashpw(bytes(enc_pwd, 'utf-8'), salt)
 
     print(f"salt: {salt}")
     print(f"hashed: {hashed}")

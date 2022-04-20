@@ -122,7 +122,12 @@ let public_key = key.publicKey;
 let private_key = key.privateKey;
 
 let exported_pub = await window.exportCryptoKey(public_key);
+
+sessionStorage.setItem('puk', exported_pub)
+
 let exported_pri = await window.exportCryptoKey(private_key);
+// Store private key in cookies for 15 days
+setCookie('prik', exported_pri, 15)
 
 
 let encrypted_result = await window.encryptMessage("hello",exported_pub);
