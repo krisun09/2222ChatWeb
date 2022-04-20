@@ -25,6 +25,25 @@ function getCookie(key) {
     return null;
 }
 
+function setLocalStorage(key, value) {
+    localStorage.setItem(key, value);
+}
+
+function getLocalStorage(key) {
+    var value = localStorage.getItem(key)
+    return value
+}
+
+function setSessionStorage(key, value) {
+    sessionStorage.setItem(key, value);
+    alert('username successfully stored')
+}
+
+function getSessionStorage(key) {
+    var value = sessionStorage.getItem(key)
+    return value
+}
+
 function listen() {
     const input = document.querySelector('input');
     const data = document.getElementById("pwd");
@@ -176,15 +195,9 @@ async function importPrivateKey(jwk) {
 
 async function exportCryptoKey(key) {
     return window.crypto.subtle.exportKey(
-      "jwk",
-      key
+        "jwk",
+        key
     );
-}
-        //return jwk;
-    })
-    .catch(function(err){
-        console.log(err);
-    })
 }
 
 
@@ -239,17 +252,14 @@ let public_key = key.publicKey;
 let private_key = key.privateKey;
 
 let exported_pub = await window.exportCryptoKey(public_key);
-
-sessionStorage.setItem('puk', exported_pub)
+setSessionStorage.setItem('puk', exported_pub);
 
 let exported_pri = await window.exportCryptoKey(private_key);
 // Store private key in cookies for 15 days
-setCookie('prik', exported_pri, 15)
+//setCookie('user', exported_pri, 15);
+setLocalStorage("prik", exported_pri);
 
 
-let encrypted_result = await window.encryptMessage("hello",exported_pub);
-
-let decrtpted_result = await window.decryptMessage(encrypted_result, exported_pri);
-
+console.log("excuted");
 console.log(decrtpted_result);
 console.log(window.ab2str(decrtpted_result));
