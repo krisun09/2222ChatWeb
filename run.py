@@ -80,8 +80,8 @@ def manage_db():
 # Add your own here as you see fit
 
 command_list = {
-    'manage_db' : manage_db,
-    'server'       : run_server
+    'manage_db': manage_db,
+    'server': run_server
 }
 
 # The default command if none other is given

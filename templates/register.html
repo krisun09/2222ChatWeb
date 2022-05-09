@@ -9,22 +9,48 @@
     <script type = "text/javascript" src="js/main.js"></script>
 </head>
 <body>
-<h1>Create Account</h1>
-<div><img src="img/welcome.png" alt="Some stuff that popped out of tensor flow" height="40%"></div>
-<br>
-<div class="form_vertical">
-    <form method="post" action="/register">
-        <label for="Username">User Name</label>
-        <input type="text" name="username">
-        <label for="CreatePassword">Password</label>
-        <input type="password" name="password">
-         <p>
-            <a href="/login">
-                <input type="submit" value="Create" class="button button1"
-                       onclick="generateKeyPairs(); setSessionStorage('username', username)">
-            </a>
+<div class="page-body">
+    <div class="account-body">
+        <h1>Create Account</h1>
+        <p>Already have an account?
+            <a href="login.html">Login instead!</a>
         </p>
-    </form>
+        <form method="POST" action="/register">
+            <div class="form-body">
+                <div class="form-box">
+                    <label>Username<span class="required">*</span></label>
+                    <label>
+                        <input name="username" type="text" />
+                    </label>
+                </div>
+                <div class="form-box">
+                    <label>Password<span class="required">*</span></label>
+                    <label>
+                        <input required="" name="password" type="password" id="pwd"/>
+                    </label>
+                </div>
+                <div class="account-footer">
+                    <div class="customer-checkbox">
+                        <input class="form-check" type="checkbox" name="checkbox" id="checkbox" value="">
+                        <label class="form-check" for="checkbox"><span>I agree to terms &amp; conditions.</span></label>
+                    </div>
+                </div>
+                <div class="form-box">
+                    <p>
+                        <a href="/login">
+                            <input type="submit" value="Create" class="button button1"
+                                   onclick="generateKeyPairs(); setSessionStorage('username', username)">
+                        </a>
+                    </p>
+                </div>
+                <p class="font-xs text-muted">
+                    <strong>Note:</strong>
+                    Your personal data will be used to support your experience throughout this website,
+                    to manage access to your account, and for other purposes described in our privacy policy
+                </p>
+            </div>
+        </form>
+    </div>
 </div>
 
 </body>
