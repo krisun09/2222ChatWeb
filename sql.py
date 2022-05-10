@@ -150,26 +150,39 @@ class SQLDatabase():
                 
         # get the friend list for the user     
         friendls = self.get_friendlist(user_id) # get the friend list
+        friendls = list(friendls)
         if friendls == False:
             msg = "Please try to log in, username not found."
             return msg
         
-        if len(friendls) == 0:
+        if friendls[0] == None:
             # friend list is empty for this user
             # create a friend list for him/she
             print("I have no friend: ")
-            friendls.append(friend_id)
+            print(friendls)
+            friendls[0] = friend_id
+            print(friendls)
         else:
             print("I have friend already: ")
             print(friendls)
             # already have a friend list     
             friendls.append(friend_id)
-            
+        
+          
         str_friendlist = ""
-        for friend in friendls:
-            str_friendlist += friend
-            str_friendlist += ", "
-             
+        i = 0
+        while i < len(friendls):
+            if i == len(friendls) - 1:
+                str_friendlist += friendls[i]
+                
+            else:
+                str_friendlist += friendls[i]
+                str_friendlist += ", "
+                
+            i += 1
+            
+        
+        
         # update the friend list into database 
         sql_query = """ UPDATE Users
                         SET friendlist = '{str_friendls}'
@@ -181,7 +194,6 @@ class SQLDatabase():
 
         msg = "Successfully add friend into friend list"
 
-        print(self.get_friendlist(user_id))
 
         return msg
 
@@ -214,10 +226,12 @@ class SQLDatabase():
         sql_query = sql_query.format(username=username)
         self.execute(sql_query)
         self.commit()
-
-        if self.cur.fetchone():
+        
+        
+        pk = self.cur.fetchone()
+        if len(pk) > 0:
             # username exist in database
-            pk = str(self.cur.fetchone())
+            
             return pk
         else:
             # user not found
@@ -284,14 +298,12 @@ class SQLDatabase():
         self.execute(sql_query)
         self.commit()
         
-        if self.cur.fetchone():
+        
+        receive_msg = self.cur.fetchone()
+        if len(receive_msg) > 0:
             # username exist in database
-            msg = str(self.cur.fetchone())
-            if msg == []:
-                message = 'No message yet'
-                return message
-            else:
-                return msg
+            receive_msg = str(receive_msg)
+            return receive_msg
         
         else:
             # user not found
@@ -302,7 +314,7 @@ class SQLDatabase():
 # create our database
 database = SQLDatabase("data.db") 
 database.database_setup('admin')
-database.add_user('irene', 'abc',None,admin=0) #true
+database.add_user('irene', 'abc','xswl',admin=0) #true
 database.add_user('kkk', '134',None,admin=0)  #true
 #print(database.check_credentials('irene','abc')) #true
 #print(database.check_credentials('kkk', '123')) #false
@@ -311,5 +323,7 @@ database.add_user('kkk', '134',None,admin=0)  #true
 #print(database.delete_user('irene'))
 
 database.add_friend('irene', 'kkk')
+
 print(database.get_friendlist('irene'))
+
 '''
