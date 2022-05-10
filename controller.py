@@ -173,7 +173,6 @@ def get_add_friend_controller():
 @post('/add_friend')
 def post_add_friend():
     friend_username = request.forms.get("friendUsername")
-    # hard coded username
     user = get_username_cookie()
     return model.add_friend(user, friend_username)
 
@@ -184,12 +183,11 @@ def get_choose_friend():
 
 @post('/choose_friend_to_chat')
 def post_choose_friend():
+    user = get_username_cookie()
     friend_name = request.forms.get("friendName")
     message = request.forms.get("message")
-    user = get_username_cookie()
 
-    # Handle the form processing
-    # username = request.forms.get('username')
+    model.save_message(user, friend_name, message)
 
     return model.choose_friend(user, friend_name, message)
 

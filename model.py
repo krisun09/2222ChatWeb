@@ -148,29 +148,36 @@ def generate_RSA_keypair():
 
 
 def add_friend_form():
-    return page_view("/add_friend")
+    self_username = controller.get_username_cookie()
+    friend_ls = sql_db.get_friendlist(self_username)
+    return page_view("/add_friend", friend_ls=friend_ls)
 
 
 def add_friend(user_id, friend_name):
     print(user_id)
     print(sql_db.add_friend(user_id, friend_name))
     print(sql_db.get_friendlist(user_id))
-    username = controller.get_username_cookie()
-    return page_view("valid_login", name=username, friend_ls=sql_db.get_friendlist(username))
+    self_username = controller.get_username_cookie()
+    friend_ls = sql_db.get_friendlist(self_username)
+    return page_view("valid_login", name=self_username, friend_ls=friend_ls)
 
 
 def choose_friend_form():
-    username = controller.get_username_cookie()
-    return page_view("/choose_friend_to_chat", friend_ls=sql_db.get_friendlist(username))
+    self_username = controller.get_username_cookie()
+    message = sql_db.get_msg(self_username)
+    return page_view("/choose_friend_to_chat", friend_ls=sql_db.get_friendlist(self_username), message=message)
 
 
 def choose_friend(user, friendID, message):
     print(user)
     print(friendID)
     print(message)
-    username = controller.get_username_cookie()
-    return page_view("valid_login", name=username, friend_ls=sql_db.get_friendlist(username))
+    self_username = controller.get_username_cookie()
+    return page_view("valid_login", name=self_username, friend_ls=sql_db.get_friendlist(self_username))
 
+
+def save_message(from_user, to_user, message):
+    sql_db.save_msg(from_user, to_user, message)
 
 # -----------------------------------------------------------------------------
 # About

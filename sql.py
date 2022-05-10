@@ -178,7 +178,6 @@ class SQLDatabase():
         sql_query = sql_query.format(str_friendls=str_friendlist, username=user_id)
         self.execute(sql_query)
         self.commit()
-        
 
         msg = "Successfully add friend into friend list"
 
@@ -189,19 +188,19 @@ class SQLDatabase():
         
     def get_friendlist(self, username):
         # get the friend list for the user
-        sql_query = """SELECT friendlist 
+        sql_query = """SELECT friendlist
                        FROM Users
-                       WHERE username = '{username}'
+                       where username = '{username}'
                     """   
                                     
         sql_query = sql_query.format(username=username)
         self.execute(sql_query)
         self.commit()
-        
-        if self.cur.fetchmany():
+
+
+        friend_list = self.cur.fetchone()
+        if len(friend_list) > 0:
             # username exist in database
-            friend_list = self.cur.fetchmany()
-            print(friend_list)
             return friend_list
         else:
             # user not found
@@ -215,7 +214,7 @@ class SQLDatabase():
         sql_query = sql_query.format(username=username)
         self.execute(sql_query)
         self.commit()
-        
+
         if self.cur.fetchone():
             # username exist in database
             pk = str(self.cur.fetchone())
@@ -270,8 +269,7 @@ class SQLDatabase():
             # friend does not exist
             message = "Sorry, enter friend does not exist, please try again."
             
-            
-        return  message
+        return message
     
     def get_msg(self, username):
         '''
@@ -298,19 +296,20 @@ class SQLDatabase():
         else:
             # user not found
             return False
-        
-        
-        
-        return 
+
+
 '''
 # create our database
 database = SQLDatabase("data.db") 
 database.database_setup('admin')
 database.add_user('irene', 'abc',None,admin=0) #true
 database.add_user('kkk', '134',None,admin=0)  #true
-print(database.check_credentials('irene','abc')) #true
-print(database.check_credentials('kkk', '123')) #false
-print(database.add_friend('irene', 'kkk'))
+#print(database.check_credentials('irene','abc')) #true
+#print(database.check_credentials('kkk', '123')) #false
+#print(database.add_friend('irene', 'kkk'))
+#print(database.get_friendlist('irene'))
+#print(database.delete_user('irene'))
+
+database.add_friend('irene', 'kkk')
 print(database.get_friendlist('irene'))
-print(database.delete_user('irene'))
 '''
