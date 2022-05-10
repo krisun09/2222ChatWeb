@@ -147,7 +147,6 @@ ul {
 
 .page-body {
     position: relative;
-    display: flex;
     word-wrap: break-word;
     padding: 16px;
     margin-bottom: 0;
@@ -215,4 +214,32 @@ ul {
 
 .text-muted {
     color: #B6B6B6 !important;;
+}
+
+.display-friend-list {
+    margin: 15px;
+    padding: 0, 40px, 10px, 40px;
+}
+
+.chat-main-bottom {
+    display: flex;
+    margin: 20px;
+}
+
+.send-message-body {
+    width:50%;
+    margin: 20px 10px 20px 10px;
+    text-align: right;
+}
+
+.name-input-box {
+}
+
+.box-label{
+}
+
+.message-display-body {
+    width:50%;
+    margin: 20px 10px 20px 10px;
+    text-align: left;
 }

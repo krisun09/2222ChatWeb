@@ -1,33 +1,33 @@
 <head>
-    <meta charset="UTF-8">
     <title>
         Valid Login
     </title>
-    <script src="js/main.js"></script>
-    <script type = "text/javascript" src="js/main.js"></script>
     <script>
         let name = sessionStorage.getItem('username');
         console.log(name)
     </script>
 </head>
-<h1 id="name">This username-password combination is valid, welcome ${name}!</h1>
-<div>
-    <h2>Here is your friend list:</h2>
-</div>
-<div>
-    <p>
-        ${friend_ls}
-    </p>
-</div>
-<div>
-    <h3>You can:</h3>
-    <form method="post" action="/valid_login" enctype="multipart/form-data">
-        <a href="/add_friend" class="button button1">
-            Add friend
-        </a>
-        <a href="/choose_friend_to_chat" class="button button1">
-            Choose friend to message
-        </a>
-    </form>
-</div>
+<body>
+    <div class="page-body">
+        <h1 id="name">This username-password combination is valid, welcome ${name}!</h1>
+        <div>
+            <h2>Here is your friend list:</h2>
+        </div>
+        <div>
+            <p>${friend_ls}</p>
+        </div>
+        <div>
+            <h3>You can:</h3>
+            <form method="post" action="/valid_login" enctype="multipart/form-data">
+                <a href="/add_friend" class="button button1">
+                    Add friend
+                </a>
+                <a href="/choose_friend_to_chat" class="button button1">
+                    Choose friend to message
+                </a>
+            </form>
+        </div>
+    </div>
+</body>
+
 
