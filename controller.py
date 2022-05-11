@@ -201,6 +201,18 @@ def receive_friend_message():
 
     return model.receive_message(user, friend_name)
 
+
+#-----------------------------------------------------------------------------
+@get('/knowledge-repository')
+def get_knowledge_repository():
+    return model.get_knowledge_repository()
+
+
+#-----------------------------------------------------------------------------
+@get('/support')
+def get_support():
+    return model.get_support()
+
 #-----------------------------------------------------------------------------
 # Help with debugging
 @post('/debug/<cmd:path>')

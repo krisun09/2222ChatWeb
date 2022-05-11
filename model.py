@@ -146,6 +146,9 @@ def generate_RSA_keypair():
 
     return public_key
 
+# -----------------------------------------------------------------------------
+# Add friend
+# -----------------------------------------------------------------------------
 
 def add_friend_form():
     self_username = controller.get_username_cookie()
@@ -185,6 +188,19 @@ def receive_message(from_user, to_user):
     return page_view("/choose_friend_to_chat", friend_ls=sql_db.get_friendlist(self_username), message=message,
                      from_user=from_user)
 
+# -----------------------------------------------------------------------------
+# knowledge-repository
+# -----------------------------------------------------------------------------
+
+def get_knowledge_repository():
+    return page_view("knowledge-repository")
+
+# -----------------------------------------------------------------------------
+# knowledge-repository
+# -----------------------------------------------------------------------------
+
+def get_support():
+    return page_view("support")
 
 # -----------------------------------------------------------------------------
 # About
