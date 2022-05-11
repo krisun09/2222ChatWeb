@@ -15,18 +15,16 @@
             <h2>Type in your friend's name to send a message</h2>
             <div class="chat-main-bottom">
                  <div class="message-display-body">
-                     <form method="post" action="/choose_friend_to_chat">
+                     <form method="post" action="/receive_message">
                      <p>Messages received:</p>
                      <div style="width:100%;height:215px;border:1px solid #000; margin-top:10px;">
-
+                            <p>${from_user}: ${message}</p>
                      </div>
-                     <a href="/receive_message">
-                        <input type="submit" value="Receive" class="button button1">
-                     </a>
+                         <input type="submit" value="Receive" class="button button1">
                      </form>
                  </div>
                 <div class="send-message-body">
-                    <form method="post" action="/choose_friend_to_chat">
+                    <form method="post" action="/send_message">
                          <div class="name-input-box">
                             <label for="friend_name">Type in your friend's name</label>
                             <input type="text" name="friendName">
@@ -35,13 +33,11 @@
                             <label for="message">Type in your message:</label>
                          </div>
                          <div class="display-send-message-body">
-                            <textarea name="message" rows="10" cols="45" style="font-size:16pt"
+                            <textarea name="message" rows="10" cols="48" style="font-size:16pt"
                             onclick="sign_message(document.getElementById(message).value)">
                             </textarea>
                          </div>
-                         <a href="/valid_login">
-                                <input type="submit" value="Send" class="button button1">
-                         </a>
+                        <input type="submit" value="Send" class="button button1">
                      </form>
                 </div>
             </div>

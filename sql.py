@@ -262,6 +262,8 @@ class SQLDatabase():
         :parm: to_username: the user who will receive the message
         :parm: msg: the message that need to be saved
         '''
+
+        print(f"calling db.save_msg, message is{msg}")
         
         # check does friend exist or not
         friend_exist = self.check_user_exist(to_username)
@@ -269,7 +271,7 @@ class SQLDatabase():
         if friend_exist:
             # friend exist
             sql_cmd =   """ INSERT INTO Messages(id,username,from_user,msg)
-                            Values({id}, '{username}', '{from_user}', '{msg}'
+                            Values({id}, '{username}', '{from_user}', '{msg}')
                         """
                     
             sql_cmd = sql_cmd.format(id=0, username=to_username, from_user=from_username, msg=msg)
@@ -308,7 +310,8 @@ class SQLDatabase():
         
         else:
             # user not found
-            return False
+            error_msg = "No messages receive"
+            return error_msg
 
 
 '''
