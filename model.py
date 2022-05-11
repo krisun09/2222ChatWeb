@@ -164,8 +164,7 @@ def add_friend(user_id, friend_name):
 
 def choose_friend_form():
     self_username = controller.get_username_cookie()
-    message = sql_db.get_msg(self_username)
-    return page_view("/choose_friend_to_chat", friend_ls=sql_db.get_friendlist(self_username), message=message)
+    return page_view("/choose_friend_to_chat", friend_ls=sql_db.get_friendlist(self_username))
 
 
 def choose_friend(user, friendID, message):
@@ -178,6 +177,13 @@ def choose_friend(user, friendID, message):
 
 def save_message(from_user, to_user, message):
     sql_db.save_msg(from_user, to_user, message)
+
+
+def receive_message(from_user, to_user):
+    self_username = controller.get_username_cookie()
+    message = sql_db.get_msg(self_username)
+    return page_view("/choose_friend_to_chat", friend_ls=sql_db.get_friendlist(self_username), message=message)
+
 
 # -----------------------------------------------------------------------------
 # About
