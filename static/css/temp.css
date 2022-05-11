@@ -188,7 +188,7 @@ ul {
     background-color: white;
     color: black;
     font-size: 16px;
-    margin: 4px 2px;
+    margin: 8px 3px;
     transition-duration: 0.4s;
     cursor: pointer;
     border: 2px solid #4CAF50 !important;
@@ -235,11 +235,16 @@ ul {
 .name-input-box {
 }
 
-.box-label{
+.box-label {
+    
 }
 
 .message-display-body {
     width:50%;
-    margin: 20px 10px 20px 10px;
+    margin: 20px 30px 20px 10px;
     text-align: left;
+}
+
+.display-send-message-body {
+    width:50%;
 }

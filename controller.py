@@ -191,7 +191,7 @@ def post_choose_friend():
 
     return model.choose_friend(user, friend_name, message)
 
-@get('/receive_message')
+@post('/choose_friend_to_chat')
 def receive_friend_message():
     user = get_username_cookie()
     friend_name = request.forms.get("friendName")
