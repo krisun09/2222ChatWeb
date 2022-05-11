@@ -172,7 +172,7 @@ def choose_friend(user, friendID, message):
     print(friendID)
     print(message)
     self_username = controller.get_username_cookie()
-    return page_view("valid_login", name=self_username, friend_ls=sql_db.get_friendlist(self_username))
+    return page_view("choose_friend_to_chat", name=self_username, friend_ls=sql_db.get_friendlist(self_username))
 
 
 def save_message(from_user, to_user, message):
@@ -182,7 +182,8 @@ def save_message(from_user, to_user, message):
 def receive_message(from_user, to_user):
     self_username = controller.get_username_cookie()
     message = sql_db.get_msg(self_username)
-    return page_view("/choose_friend_to_chat", friend_ls=sql_db.get_friendlist(self_username), message=message)
+    return page_view("/choose_friend_to_chat", friend_ls=sql_db.get_friendlist(self_username), message=message,
+                     from_user=from_user)
 
 
 # -----------------------------------------------------------------------------

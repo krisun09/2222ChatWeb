@@ -181,7 +181,7 @@ def post_add_friend():
 def get_choose_friend():
     return model.choose_friend_form()
 
-@post('/choose_friend_to_chat')
+@post('/send_message')
 def post_choose_friend():
     user = get_username_cookie()
     friend_name = request.forms.get("friendName")
@@ -189,10 +189,13 @@ def post_choose_friend():
 
     model.save_message(user, friend_name, message)
 
+    print(f"calling post_choose_friend, message is{message}")
+
     return model.choose_friend(user, friend_name, message)
 
-@post('/choose_friend_to_chat')
+@post('/receive_message')
 def receive_friend_message():
+    print(f"calling receive_friend_message")
     user = get_username_cookie()
     friend_name = request.forms.get("friendName")
 
