@@ -282,7 +282,7 @@ class SQLDatabase():
         else:
             # friend does not exist
             message = "Sorry, enter friend does not exist, please try again."
-            
+              
         return message
     
     def get_msg(self, username):
@@ -299,7 +299,8 @@ class SQLDatabase():
         self.commit()
         
         
-        receive_msg = self.cur.fetchone()
+        receive_msg = self.cur.fetchmany()
+        print(receive_msg)
         if len(receive_msg) > 0:
             # username exist in database
             receive_msg = str(receive_msg)
