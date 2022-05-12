@@ -306,6 +306,15 @@ class SQLDatabase():
         if len(receive_msg) > 0:
             # username exist in database
             receive_msg = str(receive_msg)
+            
+            # delect the message from the database
+            sql_cmd = """DELETE FROM Messages WHERE Username = '{username}'"""
+            
+            sql_cmd = sql_cmd.format(username=username)
+            self.execute(sql_cmd)
+            self.commit()
+            
+            
             return receive_msg
         
         else:
