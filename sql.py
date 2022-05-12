@@ -210,7 +210,7 @@ class SQLDatabase():
         self.commit()
 
 
-        friend_list = self.cur.fetchone()
+        friend_list = self.cur.fetchmany()
         if len(friend_list) > 0:
             # username exist in database
             return friend_list
@@ -305,7 +305,22 @@ class SQLDatabase():
         print(receive_msg)
         if len(receive_msg) > 0:
             # username exist in database
-            receive_msg = str(receive_msg)
+            receive_msg = list(receive_msg[0])[0]
+            
+            sql_cmd_get_from =  """SELECT from_user 
+                                  FROM Messages
+                                  WHERE username = '{username}'
+                                """ 
+                    
+            sql_cmd_get_from = sql_cmd_get_from.format(username=username)
+            self.execute(sql_cmd_get_from)
+            self.commit()
+            
+            from_user = list(self.cur.fetchmany()[0])[0]
+            print("this is where the message from")
+            print(from_user)
+            
+            msg = [from_user, receive_msg]
             
             # delect the message from the database
             sql_cmd = """DELETE FROM Messages WHERE Username = '{username}'"""
@@ -315,7 +330,7 @@ class SQLDatabase():
             self.commit()
             
             
-            return receive_msg
+            return msg
         
         else:
             # user not found
