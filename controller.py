@@ -214,6 +214,26 @@ def get_support():
     return model.get_support()
 
 #-----------------------------------------------------------------------------
+@get('/support-account')
+def get_support_account():
+    return model.get_support_account()
+
+#-----------------------------------------------------------------------------
+@get('/support-knowledgy')
+def get_support_knowledgy():
+    return model.get_support_knowledgy()
+
+#-----------------------------------------------------------------------------
+@get('/support-privacy')
+def get_support_privacy():
+    return model.get_support_privacy()
+
+#-----------------------------------------------------------------------------
+@get('/support-send_msg')
+def get_support_send():
+    return model.get_support_send()
+
+#-----------------------------------------------------------------------------
 # Help with debugging
 @post('/debug/<cmd:path>')
 def post_debug(cmd):
