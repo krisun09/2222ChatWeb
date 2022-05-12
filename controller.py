@@ -183,23 +183,23 @@ def get_choose_friend():
 
 @post('/send_message')
 def post_choose_friend():
-    user = get_username_cookie()
+    from_user = get_username_cookie()
     friend_name = request.forms.get("friendName")
     message = request.forms.get("message")
 
-    model.save_message(user, friend_name, message)
+    model.save_message(from_user, friend_name, message)
 
-    print(f"calling post_choose_friend, message is{message}")
+    print(f"calling post_choose_friend, message is{message}, current user is {from_user}, friend is {friend_name}")
 
-    return model.choose_friend(user, friend_name, message)
+    return model.choose_friend(from_user, friend_name, message)
 
 @post('/receive_message')
 def receive_friend_message():
-    print(f"calling receive_friend_message")
-    user = get_username_cookie()
+    from_user = get_username_cookie()
     friend_name = request.forms.get("friendName")
+    print(f"calling receive_friend_message, current user is {from_user}, friend is {friend_name}")
 
-    return model.receive_message(user, friend_name)
+    return model.receive_message(from_user, friend_name)
 
 
 #-----------------------------------------------------------------------------

@@ -1,8 +1,8 @@
 *{
     font-family: serif;
 }
+
 h1 {
-    font-family: serif;
     font-size: 40pt;
     color: black;
     margin-bottom: 5px;
@@ -60,6 +60,7 @@ body {
     height: 100%;
     margin: 0;
     padding: 0;
+    --ff-sans: -apple-system,BlinkMacSystemFont,"Segoe UI Adjusted","Segoe UI","Liberation Sans",sans-serif;
 }
 
 center img {
@@ -78,14 +79,6 @@ center img {
     width: 100%;
     padding: 9px 20px;
     font-size: 16px;
-}
-
-html,body {
-    position: fixed;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
 }
 
 ul {
@@ -146,6 +139,7 @@ ul {
 }
 
 .page-body {
+    min-height: 500px;
     position: relative;
     word-wrap: break-word;
     padding: 16px;
@@ -218,7 +212,7 @@ ul {
 
 .display-friend-list {
     margin: 15px;
-    padding: 0, 40px, 10px, 40px;
+    padding: 10px 40px;
 }
 
 .chat-main-bottom {
@@ -248,3 +242,25 @@ ul {
 .display-send-message-body {
     width:50%;
 }
+
+#repo-mainbar {
+    width: 70%;
+    text-align: left;
+}
+
+.all-questions {
+    width: auto;
+    margin-top: 20px;
+}
+
+.div-question {
+
+}
+
+.question-title {
+    font-size: 18pt;
+    margin-bottom: 5px;
+    font-weight: 500;
+    color: hsl(206,100%,40%);
+}
+
