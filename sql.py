@@ -1,5 +1,6 @@
 import sqlite3
 
+
 # This class is a simple handler for all of our SQL database actions
 # Practicing a good separation of concerns, we should only ever call 
 # These functions from our models
@@ -14,7 +15,7 @@ class SQLDatabase():
 
     # Get the database running
     def __init__(self, database_arg):
-        self.conn = sqlite3.connect(database_arg) # create a connection object, creat a database
+        self.conn = sqlite3.connect(database_arg)  # create a connection object, creat a database
         # the cursor object allow us to excute the commands and queries in the database
         self.cur = self.conn.cursor()
 
@@ -35,8 +36,8 @@ class SQLDatabase():
         # similar to git commit
         self.conn.commit()
 
-    #-----------------------------------------------------------------------------
-    
+    # -----------------------------------------------------------------------------
+
     # Sets up the database
     # Default admin password
     def database_setup(self, admin_password='admin'):
@@ -59,7 +60,7 @@ class SQLDatabase():
         self.commit()
         # Add our admin user
         self.add_user('admin', admin_password, None, admin=1)
-        
+
         # new table for message
         self.execute("DROP TABLE IF EXISTS Messages")
         self.commit()
@@ -67,41 +68,41 @@ class SQLDatabase():
         # Create the users table
         # add column public key
         self.execute("""CREATE TABLE Messages(
-            
+
             Id INT,
             username TEXT,
             from_user Text,
             msg Text
-            
+
         );""")
 
         self.commit()
 
-    #-----------------------------------------------------------------------------#
-    #-----------------------------------------------------------------------------#
-    #-----------------------------------------------------------------------------#
-    #++++++++++++++++++++++++++++ User handling ++++++++++++++++++++++++++++++++++#
-    #-----------------------------------------------------------------------------#
-    #-----------------------------------------------------------------------------#
-    #-----------------------------------------------------------------------------#
+    # -----------------------------------------------------------------------------#
+    # -----------------------------------------------------------------------------#
+    # -----------------------------------------------------------------------------#
+    # ++++++++++++++++++++++++++++ User handling ++++++++++++++++++++++++++++++++++#
+    # -----------------------------------------------------------------------------#
+    # -----------------------------------------------------------------------------#
+    # -----------------------------------------------------------------------------#
 
     # Add a user to the database
-    def add_user(self,username, password, pk, admin=0):
-        sql_cmd =   """INSERT INTO Users(Id,username,password,pk,admin)
+    def add_user(self, username, password, pk, admin=0):
+        sql_cmd = """INSERT INTO Users(Id,username,password,pk,admin)
                      VALUES({id}, '{username}', '{password}', '{pk}',  {admin})
                     """
 
-        sql_cmd = sql_cmd.format(id=0,username=username, password=password, pk=pk, admin=admin)
+        sql_cmd = sql_cmd.format(id=0, username=username, password=password, pk=pk, admin=admin)
 
         self.execute(sql_cmd)
         self.commit()
-        
-        #print(self.check_user_exist(username))
+
+        # print(self.check_user_exist(username))
         return True
-    
-    #--------------------------------------------------------------------------#
-    #-----------------------------------------------------------------------------
-    #--------------------------------------------------------------------------#
+
+    # --------------------------------------------------------------------------#
+    # -----------------------------------------------------------------------------
+    # --------------------------------------------------------------------------#
     # Check login credentials
     def check_credentials(self, username, password):
         sql_query = """SELECT 1 
@@ -109,52 +110,52 @@ class SQLDatabase():
                        WHERE username = '{username}' AND password = '{password}'
                     """
         sql_query = sql_query.format(username=username, password=password)
-        
+
         self.execute(sql_query)
         self.commit()
-        
+
         # If our query returns
         if self.cur.fetchone():
             return True
         else:
             return False
-        
-    #--------------------------------------------------------------------------#
-    #--------------------------------------------------------------------------#
-    #--------------------------------------------------------------------------#
-    # check does username already exist or not  
+
+    # --------------------------------------------------------------------------#
+    # --------------------------------------------------------------------------#
+    # --------------------------------------------------------------------------#
+    # check does username already exist or not
     def check_user_exist(self, username):
         sql_query = """ SELECT 1 
                         FROM Users
                         WHERE username = '{username}'
                     """
         sql_query = sql_query.format(username=username)
-        
+
         self.execute(sql_query)
         self.commit()
-        
+
         if self.cur.fetchone():
             # username exist in database
             return True
         else:
             return False
-    
-    #--------------------------------------------------------------------------#
-    #--------------------------------------------------------------------------#
-    #--------------------------------------------------------------------------#   
-    def add_friend(self,user_id, friend_id):
+
+    # --------------------------------------------------------------------------#
+    # --------------------------------------------------------------------------#
+    # --------------------------------------------------------------------------#
+    def add_friend(self, user_id, friend_id):
         # check does the friend that we want to add is our web user or not
         if self.check_user_exist(friend_id) == False:
             msg = "Friend does not exist, please enter a valid friend username."
             return msg
-                
-        # get the friend list for the user     
-        friendls = self.get_friendlist(user_id) # get the friend list
+
+        # get the friend list for the user
+        friendls = self.get_friendlist(user_id)  # get the friend list
         friendls = list(friendls)
         if friendls == False:
             msg = "Please try to log in, username not found."
             return msg
-        
+
         if friendls[0] == None:
             # friend list is empty for this user
             # create a friend list for him/she
@@ -165,96 +166,86 @@ class SQLDatabase():
         else:
             print("I have friend already: ")
             print(friendls)
-            # already have a friend list     
+            # already have a friend list
             friendls.append(friend_id)
-        
-          
+
         str_friendlist = ""
         i = 0
         while i < len(friendls):
             if i == len(friendls) - 1:
                 str_friendlist += friendls[i]
-                
+
             else:
                 str_friendlist += friendls[i]
                 str_friendlist += ", "
-                
+
             i += 1
-            
-        
-        
-        # update the friend list into database 
+
+        # update the friend list into database
         sql_query = """ UPDATE Users
                         SET friendlist = '{str_friendls}'
                         WHERE username = '{username}'
-                    """ 
+                    """
         sql_query = sql_query.format(str_friendls=str_friendlist, username=user_id)
         self.execute(sql_query)
         self.commit()
 
         msg = "Successfully add friend into friend list"
 
-
         return msg
 
-        
     def get_friendlist(self, username):
         # get the friend list for the user
         sql_query = """SELECT friendlist
                        FROM Users
                        where username = '{username}'
-                    """   
-                                    
+                    """
+
         sql_query = sql_query.format(username=username)
         self.execute(sql_query)
         self.commit()
 
-
-        friend_list = self.cur.fetchone()
+        friend_list = self.cur.fetchmany()
         if len(friend_list) > 0:
             # username exist in database
             return friend_list
         else:
             # user not found
             return False
-        
+
     def get_pk(self, username):
         sql_query = """SELECT pk 
                        FROM Users
                        WHERE username = '{username}'
-                    """                   
+                    """
         sql_query = sql_query.format(username=username)
         self.execute(sql_query)
         self.commit()
-        
-        
+
         pk = self.cur.fetchone()
         if len(pk) > 0:
             # username exist in database
-            
+
             return pk
         else:
             # user not found
             return False
-
 
     def delete_user(self, username):
         '''
         This function is only accessable by the admin.
         Users other than admin must not able to use this function.
         '''
-        
+
         sql_query = """DELETE FROM Users WHERE Username = '{username}'"""
-        
-        
+
         sql_query = sql_query.format(username=username)
         self.execute(sql_query)
-        self.commit() 
-        
+        self.commit()
+
         msg = "Remove user {} from database".format(username)
-        return msg  
-            
-    
+        return msg
+
     def save_msg(self, from_username, to_username, msg):
         '''
         把信息存到对应的用户的database里
@@ -264,29 +255,29 @@ class SQLDatabase():
         '''
 
         print(f"calling db.save_msg, message is{msg}")
-        
+
         # check does friend exist or not
         friend_exist = self.check_user_exist(to_username)
-        
+
         if friend_exist:
             # friend exist
-            sql_cmd =   """ INSERT INTO Messages(id,username,from_user,msg)
+            sql_cmd = """ INSERT INTO Messages(id,username,from_user,msg)
                             Values({id}, '{username}', '{from_user}', '{msg}')
                         """
-                    
+
             sql_cmd = sql_cmd.format(id=0, username=to_username, from_user=from_username, msg=msg)
-        
+
             self.execute(sql_cmd)
             self.commit()
-        
+
             message = "Message successfully send."
-        
+
         else:
             # friend does not exist
             message = "Sorry, enter friend does not exist, please try again."
-              
+
         return message
-    
+
     def get_msg(self, username):
         '''
         用户取出发给自己的信息
@@ -295,19 +286,41 @@ class SQLDatabase():
         sql_query = """SELECT msg 
                        FROM Messages
                        WHERE username = '{username}'
-                    """                   
+                    """
         sql_query = sql_query.format(username=username)
         self.execute(sql_query)
         self.commit()
-        
-        
+
         receive_msg = self.cur.fetchmany()
         print(receive_msg)
         if len(receive_msg) > 0:
             # username exist in database
-            receive_msg = str(receive_msg)
-            return receive_msg
-        
+            receive_msg = list(receive_msg[0])[0]
+
+            sql_cmd_get_from = """SELECT from_user 
+                                  FROM Messages
+                                  WHERE username = '{username}'
+                                """
+
+            sql_cmd_get_from = sql_cmd_get_from.format(username=username)
+            self.execute(sql_cmd_get_from)
+            self.commit()
+
+            from_user = list(self.cur.fetchmany()[0])[0]
+            print("this is where the message from")
+            print(from_user)
+
+            msg = [from_user, receive_msg]
+
+            # delect the message from the database
+            sql_cmd = """DELETE FROM Messages WHERE Username = '{username}'"""
+
+            sql_cmd = sql_cmd.format(username=username)
+            self.execute(sql_cmd)
+            self.commit()
+
+            return msg
+
         else:
             # user not found
             error_msg = "No messages receive"
