@@ -8,24 +8,24 @@
 </head>
 <body>
     <div class="page-body">
-        <div class="form_vertical">
+        <div class="ask-question-main">
             <h2>Ask a public question</h2>
             <div class="chat-main-bottom">
-                <div class="send-message-body">
-                    <form method="post" action="/send_message">
-                         <div class="name-input-box">
-                            <label for="friend_name">Type in your friend's name</label>
-                            <input type="text" name="friendName">
+                <div class="ask-question-body">
+                    <form method="post" action="/add-question">
+                         <div class="question-title-input">
+                            <label class="ask-question-title">Title</label>
+                             <p class="text-muted">Be specific and imagine you’re asking a question to another person</p>
+                            <input type="text" name="question-title">
                          </div>
-                         <div class="box-label">
-                            <label for="message">Type in your message:</label>
+                         <div class="">
+                            <label class="ask-question-title">Body</label>
+                            <p class="text-muted"> Include all the information someone would need to answer your question</p>
                          </div>
-                         <div class="display-send-message-body">
-                            <textarea name="message" rows="10" cols="48" style="font-size:16pt"
-                            onclick="sign_message(document.getElementById(message).value)">
-                            </textarea>
+                         <div class="question-body">
+                            <textarea name="question-body"></textarea>
                          </div>
-                        <input type="submit" value="Send" class="button button1">
+                        <input type="submit" value="Publish your question" class="publish-button button button1">
                      </form>
                 </div>
             </div>
