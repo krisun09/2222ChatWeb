@@ -201,7 +201,6 @@ def receive_friend_message():
 
     return model.receive_message(from_user, friend_name)
 
-
 #-----------------------------------------------------------------------------
 @get('/knowledge-repository')
 def get_knowledge_repository():
@@ -210,6 +209,14 @@ def get_knowledge_repository():
 @get('/ask-question')
 def get_ask_question():
     return model.get_ask_question()
+
+@post('/add-question')
+def add_question():
+    title = request.forms.get("question-title")
+    body = request.forms.get("question-body")
+    from_user = get_username_cookie()
+    model.write_to_knowledge_repo(title, body, from_user)
+    return model.get_knowledge_repository()
 
 #-----------------------------------------------------------------------------
 @get('/support')

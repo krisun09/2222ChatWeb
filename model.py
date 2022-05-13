@@ -13,10 +13,6 @@ import random
 import sql
 from Crypto.PublicKey import RSA
 import bcrypt
-from jinja2 import Template
-from bs4 import BeautifulSoup
-import re
-
 
 # Initialise our views, all arguments are defaults for the template
 page_view = view.View()
@@ -28,7 +24,7 @@ sql_db.database_setup(admin_password='admin')
 salt = bcrypt.gensalt()
 
 # id counter for knowledge repo
-id_counter = 0
+id_counter = 1
 
 # -----------------------------------------------------------------------------
 # Index
@@ -209,7 +205,7 @@ def get_knowledge_repository():
 def get_ask_question():
     return page_view("ask-question")
 
-def write_to_knowledge_repo(title, text):
+def write_to_knowledge_repo(title, text, from_user):
     """writes to knowledge_repository.html"""
 
     global id_counter
@@ -221,6 +217,9 @@ def write_to_knowledge_repo(title, text):
                   <h4 class="question-title">{title}</h4>
                   <div class="question-body">
                       <p>{text}</p>
+                  </div>
+                  <div class="question-footer">
+                      <p>{from_user}</p>
                   </div>
               </div>'''
                       )
@@ -258,7 +257,7 @@ def write_to_knowledge_repo(title, text):
     #     f.write(t.render(replace_me=formatted_text))
 
 
-write_to_knowledge_repo("testing write func", "is it working?")
+# write_to_knowledge_repo("testing write func", "is it working?")
 
 # -----------------------------------------------------------------------------
 # Support page
