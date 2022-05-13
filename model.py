@@ -206,6 +206,8 @@ def receive_message(from_user, to_user):
 def get_knowledge_repository():
     return page_view("knowledge-repository")
 
+def get_ask_question():
+    return page_view("ask-question")
 
 def write_to_knowledge_repo(title, text):
     """writes to knowledge_repository.html"""
@@ -214,13 +216,13 @@ def write_to_knowledge_repo(title, text):
     new_id_counter = id_counter
     id_counter = new_id_counter + 1
     formatted_text = (
-            f'''<div id={id_counter} class="div-question">
-                <h4 class="question-title">{title}</h4>
-                <div class="question-body">
-                    <p>{text}</p>
-                </div>
-              </div>
-              { '{{replace_me}}' }'''
+            f'''
+              <div id={id_counter} class="div-question">
+                  <h4 class="question-title">{title}</h4>
+                  <div class="question-body">
+                      <p>{text}</p>
+                  </div>
+              </div>'''
                       )
     # with open('templates/knowledge-repository.html') as f:
     #     t = f.read()
@@ -242,16 +244,18 @@ def write_to_knowledge_repo(title, text):
     # print(html)
 
 
-    with open('templates/knowledge-repository.html') as f:
-        t = Template(f.read())
+    with open('templates/knowledge-repository.html', "a") as f:
+        f.write(formatted_text)
+
+        # t = Template(f.read())
 
         # Create a dict with template keys and their values
-        val = {'replace_me': formatted_text}
+    # val = {'replace_me': formatted_text}
 
-    g = jinja2.Template('{{t | replace("replace_me", formatted_text)}}')
-
-    with open('templates/knowledge-repository.html', "w") as f:
-        f.write(t.render(val))
+    # g = jinja2.Template('{{t | replace("replace_me", formatted_text)}}')
+    #
+    # with open('templates/knowledge-repository.html', "w") as f:
+    #     f.write(t.render(replace_me=formatted_text))
 
 
 write_to_knowledge_repo("testing write func", "is it working?")
@@ -274,8 +278,8 @@ def get_support_account():
 # Support-knowledgy page
 # -----------------------------------------------------------------------------
 
-def get_support_knowledgy():
-    return page_view("support-knowledgy")
+def get_support_knowledge():
+    return page_view("support-knowledge")
 
 # -----------------------------------------------------------------------------
 # Support-privacy page

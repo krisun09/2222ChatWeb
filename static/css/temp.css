@@ -154,7 +154,7 @@ ul {
 }
 
 .account-body a {
-    color: #4CAF50;
+    color: hsl(206,100%,40%);
 }
 
 .form-box {
@@ -185,11 +185,11 @@ ul {
     margin: 8px 3px;
     transition-duration: 0.4s;
     cursor: pointer;
-    border: 2px solid #4CAF50 !important;
+    border: 2px solid hsl(206,100%,40%) !important;
 }
 
 .button1:hover {
-    background-color: #4CAF50;
+    background-color: hsl(206,100%,40%);
     color: white;
 }
 
@@ -243,9 +243,30 @@ ul {
     width:50%;
 }
 
-#repo-mainbar {
+.repo-head {
+    display: -webkit-inline-flex;
+}
+
+.repo-right {
+    width: 30%;
+}
+
+.page-body .repo-right .button{
+    font-size: 12pt;
+    width: 150px;
+    padding: 10px 0;
+    margin-left: 40px;
+}
+
+.repo-mainbar {
+    width: 100%;
+}
+
+.repo-head h1 {
+    font-size: 34pt;
     width: 70%;
-    text-align: left;
+    padding-left: 145px;
+    margin-top: 5px;
 }
 
 .all-questions {
@@ -254,7 +275,6 @@ ul {
 }
 
 .div-question {
-
 }
 
 .question-title {
