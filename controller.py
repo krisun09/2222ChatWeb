@@ -207,6 +207,9 @@ def receive_friend_message():
 def get_knowledge_repository():
     return model.get_knowledge_repository()
 
+@get('/ask-question')
+def get_ask_question():
+    return model.get_ask_question()
 
 #-----------------------------------------------------------------------------
 @get('/support')
@@ -219,9 +222,9 @@ def get_support_account():
     return model.get_support_account()
 
 #-----------------------------------------------------------------------------
-@get('/support-knowledgy')
-def get_support_knowledgy():
-    return model.get_support_knowledgy()
+@get('/support-knowledge')
+def get_support_knowledge():
+    return model.get_support_knowledge()
 
 #-----------------------------------------------------------------------------
 @get('/support-privacy')
