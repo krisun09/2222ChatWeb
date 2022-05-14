@@ -5,8 +5,6 @@
     It should exist as a separate layer to any database or data structure that you might be using
     Nothing here should be stateful, if it's stateful let the database handle it
 '''
-import jinja2
-
 import controller
 import view
 import random
@@ -24,7 +22,7 @@ sql_db.database_setup(admin_password='admin')
 salt = bcrypt.gensalt()
 
 # id counter for knowledge repo
-id_counter = 1
+id_counter = 5
 
 # -----------------------------------------------------------------------------
 # Index
