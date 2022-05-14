@@ -9,16 +9,6 @@ h1 {
     font-weight: bold;
 }
 
-li {
-    float: left;
-    height: 48px;
-    margin: 0 10px;
-}
-
-a {
-    text-decoration: none;
-}
-
 .header {
     list-style-type: none;
     margin: 0;
@@ -29,16 +19,32 @@ a {
     text-align: center;
     text-decoration: none;
     display: flex;
+    width: 100%;
+    /*position: fixed;*/
+    /*top: 0;*/
+    /*left: 0;*/
+}
+
+li {
+    float: left;
+    height: 48px;
+    margin: 0 10px;
+}
+
+a {
+    text-decoration: none;
 }
 
 .header-box {
     width: 50%;
-    padding: 15px 0 5px 30px;
+    padding: 13px 0 5px 30px;
     display: -webkit-box;
     margin: 0;
 }
 
 .header-logo {
+    font-weight: 600;
+    font-size: 22px;
     margin: 0;
     color: white;
 }
@@ -106,7 +112,7 @@ ul {
     font-family: inherit; /* Important for vertical align on mobile phones */
     margin: 0; /* Important for vertical align on mobile phones */
     height: 46px;
-    padding: 5px 0 7px 0;
+    padding: 5px 0 8px 0;
 }
 
 /* Dropdown content (hidden by default) */
