@@ -150,8 +150,9 @@ class SQLDatabase():
             return msg
 
         # get the friend list for the user
-        friendls = self.get_friendlist(user_id)  # get the friend list
+        friendls = self.get_friendlist(user_id)[0]  # get the friend list
         friendls = list(friendls)
+        print(friendls)
         if friendls == False:
             msg = "Please try to log in, username not found."
             return msg
@@ -323,8 +324,10 @@ class SQLDatabase():
 
         else:
             # user not found
+            error_list = ['None']
             error_msg = "No messages receive"
-            return error_msg
+            error_list.append(error_msg)
+            return error_list
 
 
 '''
