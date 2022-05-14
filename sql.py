@@ -60,6 +60,8 @@ class SQLDatabase():
         self.commit()
         # Add our admin user
         self.add_user('admin', admin_password, None, admin=1)
+        self.add_user('irene', 'thisisirene', None, admin=0)
+        self.add_user('christina', 'thisischristina', None, admin=0)
 
         # new table for message
         self.execute("DROP TABLE IF EXISTS Messages")
