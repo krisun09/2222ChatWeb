@@ -231,17 +231,13 @@ ul {
     margin: 20px;
 }
 
-.send-message-body {
-    width:50%;
-    margin: 20px 10px 20px 10px;
-    text-align: right;
-}
-
 .name-input-box {
 }
 
 .box-label {
-
+    text-align: left;
+    max-width: 550;
+    margin-bottom: 10px;
 }
 
 .message-display-body {
@@ -250,8 +246,12 @@ ul {
     text-align: left;
 }
 
+.send-message-body .message-display-body{
+    width: 100%
+}
+
 .display-send-message-body {
-    width:50%;
+    width:100%;
 }
 
 .repo-head {
