@@ -215,6 +215,15 @@ def add_question():
     title = request.forms.get("question-title")
     body = request.forms.get("question-body")
     from_user = get_username_cookie()
+    anonymously = False
+    if request.forms.get("publish-button") == "Publish your question anonymously":
+        anonymously = True
+
+    if from_user is None:
+        from_user = "User not logged on"
+    elif anonymously is True:
+        from_user = "Anonymous"
+
     model.write_to_knowledge_repo(title, body, from_user)
     return model.get_knowledge_repository()
 

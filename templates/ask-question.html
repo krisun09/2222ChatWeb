@@ -11,6 +11,16 @@
         <div class="ask-question-main">
             <h2>Ask a public question</h2>
             <div class="chat-main-bottom">
+                <div class="ask-good-question">
+                    <h3>Asking a good question</h3>
+                    <p>You're ready to ask or share challenging computing questions and the community is here to help! <br> <br>
+                        To get you the best answers, we've provided some guidance: <br> <br>
+                    </p>
+                    <p>- Summarise the problem
+                        <br>- Describe what you've tried
+                        <br>- When appropriate, show some code
+                    </p>
+                </div>
                 <div class="ask-question-body">
                     <form method="post" action="/add-question">
                          <div class="question-title-input">
@@ -25,7 +35,10 @@
                          <div class="question-body">
                             <textarea name="question-body"></textarea>
                          </div>
-                        <input type="submit" value="Publish your question" class="publish-button button button1">
+                        <div class="publish-button">
+                            <input type="submit" name="publish-button" value="Publish your question" class="publish-button button button1">
+                            <input type="submit" name="publish-button" value="Publish your question anonymously" class="publish-button button button1">
+                        </div>
                      </form>
                 </div>
             </div>
